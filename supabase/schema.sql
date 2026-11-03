@@ -578,6 +578,8 @@ VALUES
     "cv_pdf_url": "",
     "social_github": "https://github.com",
     "social_telegram": "https://t.me",
-    "social_facebook": "https://facebook.com"
+    "social_facebook": "https://facebook.com",
+    "social_twitter": "https://x.com",
+    "social_tiktok": "https://tiktok.com"
   }'::jsonb)
 ON CONFLICT (key) DO NOTHING;

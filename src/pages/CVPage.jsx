@@ -11,12 +11,14 @@ import {
   Sparkles
 } from 'lucide-react';
 import Layout from '../components/Layout';
+import { useLanguage } from '../lib/LanguageContext';
 import { getCVData, getSiteSettings } from '../lib/api';
 
 export default function CVPage() {
   const [sections, setSections] = useState([]);
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     let mounted = true;
@@ -77,7 +79,7 @@ export default function CVPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
-                <Sparkles className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> Curriculum Vitae
+                <Sparkles className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> {t('cv_badge')}
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#111318] dark:text-white">
                 {authorName}
@@ -99,7 +101,7 @@ export default function CVPage() {
                   className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-110"
                 >
                   <Download className="h-4 w-4" />
-                  Download PDF
+                  {t('download_pdf')}
                 </a>
               </div>
             )}
@@ -121,10 +123,10 @@ export default function CVPage() {
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <FileText className="mx-auto h-8 w-8 text-[#0d47e1] mb-2" />
             <h3 className="text-base font-bold text-[#111318] dark:text-white">
-              CV Content Being Updated
+              {t('cv_updating_title')}
             </h3>
             <p className="mt-1 text-sm text-[#4a5162] dark:text-neutral-400">
-              The CV sections will appear here as soon as they are added in the admin dashboard.
+              {t('cv_updating_desc')}
             </p>
           </div>
         ) : (
@@ -164,7 +166,7 @@ export default function CVPage() {
                             )}
                           </div>
                           {item.subtitle && (
-                            <p className="text-xs font-bold text-[#0d47e1] dark:text-[#05dcef]">
+                            <p className="font-mono tabular-nums text-xs font-bold text-[#0d47e1] dark:text-[#05dcef]">
                               {item.subtitle}
                             </p>
                           )}

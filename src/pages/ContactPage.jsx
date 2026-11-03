@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Mail, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import Layout from '../components/Layout';
+import { useLanguage } from '../lib/LanguageContext';
 import { sendContactMessage } from '../lib/api';
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -50,13 +52,13 @@ export default function ContactPage() {
       <div className="space-y-8">
         <div className="pb-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
-            <Mail className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> Direct Contact
+            <Mail className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> {t('contact_badge')}
           </span>
           <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-[#111318] sm:text-4xl dark:text-white">
-            Get in <span className="text-[#0d47e1] dark:text-[#05dcef]">Touch</span>
+            {t('contact_title_1')} <span className="text-[#0d47e1] dark:text-[#05dcef]">{t('contact_title_2')}</span>
           </h1>
           <p className="mt-2 text-base text-[#2c313c] dark:text-neutral-400">
-            Have a question about an article, a consulting inquiry, or feedback? Send a message directly using the form below.
+            {t('contact_subtitle')}
           </p>
           <div className="mt-5 h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
         </div>
@@ -66,7 +68,7 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1.5">
-                  Your Full Name *
+                  {t('contact_name')}
                 </label>
                 <input
                   type="text"
@@ -80,7 +82,7 @@ export default function ContactPage() {
 
               <div>
                 <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1.5">
-                  Your Email Address *
+                  {t('contact_email')}
                 </label>
                 <input
                   type="email"
@@ -95,7 +97,7 @@ export default function ContactPage() {
 
             <div>
               <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1.5">
-                Subject *
+                {t('contact_subject')}
               </label>
               <input
                 type="text"
@@ -109,7 +111,7 @@ export default function ContactPage() {
 
             <div>
               <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1.5">
-                Message *
+                {t('contact_message')}
               </label>
               <textarea
                 required
@@ -127,7 +129,7 @@ export default function ContactPage() {
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-110 disabled:opacity-60"
             >
               <Send className="h-4 w-4" />
-              {status.state === 'loading' ? 'Sending...' : 'Send Message'}
+              {status.state === 'loading' ? t('contact_sending') : t('contact_send')}
             </button>
 
             {status.state === 'success' && (

@@ -20,6 +20,8 @@ export default function SettingsAdmin() {
     social_github: 'https://github.com',
     social_telegram: 'https://t.me',
     social_facebook: 'https://facebook.com',
+    social_twitter: 'https://x.com',
+    social_tiktok: 'https://tiktok.com',
   });
 
   const [subscribers, setSubscribers] = useState([]);
@@ -40,6 +42,7 @@ export default function SettingsAdmin() {
           if (settingsData) {
             setSettings({
               ...settingsData,
+              social_github: settingsData.social_github ?? 'https://github.com',
               social_telegram:
                 settingsData.social_telegram !== undefined
                   ? settingsData.social_telegram
@@ -49,9 +52,15 @@ export default function SettingsAdmin() {
               social_facebook:
                 settingsData.social_facebook !== undefined
                   ? settingsData.social_facebook
-                  : settingsData.social_twitter === 'https://twitter.com'
-                  ? 'https://facebook.com'
-                  : settingsData.social_twitter || 'https://facebook.com',
+                  : 'https://facebook.com',
+              social_twitter:
+                settingsData.social_twitter !== undefined
+                  ? settingsData.social_twitter
+                  : 'https://x.com',
+              social_tiktok:
+                settingsData.social_tiktok !== undefined
+                  ? settingsData.social_tiktok
+                  : 'https://tiktok.com',
             });
           }
           setSubscribers(subsData || []);
@@ -221,7 +230,7 @@ export default function SettingsAdmin() {
             </div>
 
             {/* Social Links */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 pt-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                   GitHub Profile URL
@@ -257,6 +266,32 @@ export default function SettingsAdmin() {
                   value={settings.social_facebook || ''}
                   placeholder="https://facebook.com/username"
                   onChange={(e) => setSettings({ ...settings, social_facebook: e.target.value })}
+                  className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                  Twitter / X Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={settings.social_twitter || ''}
+                  placeholder="https://x.com/username"
+                  onChange={(e) => setSettings({ ...settings, social_twitter: e.target.value })}
+                  className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                  TikTok Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={settings.social_tiktok || ''}
+                  placeholder="https://tiktok.com/@username"
+                  onChange={(e) => setSettings({ ...settings, social_tiktok: e.target.value })}
                   className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 />
               </div>

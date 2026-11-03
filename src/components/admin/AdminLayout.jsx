@@ -16,9 +16,11 @@ import {
   Menu, 
   X, 
   Sun, 
-  Moon
+  Moon,
+  Languages
 } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
+import { useLanguage } from '../../lib/LanguageContext';
 
 export default function AdminLayout({ children, title, subtitle }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,6 +32,7 @@ export default function AdminLayout({ children, title, subtitle }) {
   });
 
   const { user, profile, logout } = useAuth();
+  const { lang, toggleLang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -171,6 +174,16 @@ export default function AdminLayout({ children, title, subtitle }) {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* One-Click Bilingual Switcher */}
+            <button
+              onClick={toggleLang}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#e2e5ec] bg-slate-50 px-3 py-1.5 text-xs font-bold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
+              title={lang === 'en' ? 'ប្តូរទៅភាសាខ្មែរ (Switch to Khmer)' : 'Switch to English'}
+            >
+              <Languages className="h-3.5 w-3.5 text-[#0d47e1] dark:text-[#3cd0a8]" />
+              <span>{lang === 'en' ? 'ភាសាខ្មែរ' : 'English'}</span>
+            </button>
+
             <button
               onClick={toggleTheme}
               className="rounded-lg bg-[#2a2723] p-2 text-[#f6c453] shadow-[0_0_12px_rgba(245,158,11,0.25)] transition hover:brightness-110"

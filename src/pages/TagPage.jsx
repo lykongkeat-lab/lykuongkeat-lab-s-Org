@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { Tag as TagIcon, Clock, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import Layout from '../components/Layout';
+import { useLanguage } from '../lib/LanguageContext';
 import { getTagBySlug, getPosts } from '../lib/api';
 
 export default function TagPage() {
   const { slug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
+  const { t } = useLanguage();
 
   const [tag, setTag] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -69,19 +71,20 @@ export default function TagPage() {
             to="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d47e1] hover:underline dark:text-neutral-400 dark:hover:text-white mb-4"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
+            <ArrowLeft className="h-3.5 w-3.5" /> {t('back_to_articles')}
           </Link>
 
           <div className="pb-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#efe4c8] px-3 py-1 text-[#6b4c1b] dark:bg-[#05dcef]/15 dark:text-[#05dcef] mb-2">
               <TagIcon className="h-4 w-4" />
-              <span className="text-xs font-bold uppercase tracking-wider">Tag</span>
+              <span className="text-xs font-bold uppercase tracking-wider">{t('tag_badge')}</span>
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-[#111318] dark:text-white sm:text-4xl">
               #{tag?.name || slug}
             </h1>
             <p className="mt-2 text-xs font-bold text-[#0d47e1] dark:text-[#05dcef]">
-              {totalCount} {totalCount === 1 ? 'article tagged' : 'articles tagged'}
+              <span className="font-mono tabular-nums">{totalCount}</span>{' '}
+              {totalCount === 1 ? t('article_tagged') : t('articles_tagged')}
             </p>
             <div className="mt-5 h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
           </div>
@@ -99,7 +102,7 @@ export default function TagPage() {
         ) : posts.length === 0 ? (
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <p className="text-[#2c313c] dark:text-neutral-400 font-medium">
-              No articles found with this tag yet.
+              {t('no_tag_articles')}
             </p>
           </div>
         ) : (
@@ -122,19 +125,19 @@ export default function TagPage() {
 
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-2 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
-                      <span>
+                      <span className="font-mono tabular-nums">
                         {post.published_at
                           ? new Date(post.published_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               year: 'numeric',
                             })
-                          : 'Draft'}
+                          : t('draft')}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3 text-[#0d47e1]" />
-                        {post.reading_time || 3} min
+                        <span className="font-mono tabular-nums">{post.reading_time || 3}</span> {t('min_short')}
                       </span>
                     </div>
 
@@ -145,7 +148,7 @@ export default function TagPage() {
                     </Link>
 
                     <p className="text-sm text-[#4a5162] line-clamp-2 dark:text-neutral-400">
-                      {post.excerpt || 'Read more...'}
+                      {post.excerpt}
                     </p>
                   </div>
                 </div>
@@ -161,17 +164,18 @@ export default function TagPage() {
               disabled={pageParam <= 1}
               className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              <ChevronLeft className="h-4 w-4" /> Previous
+              <ChevronLeft className="h-4 w-4" /> {t('pagination_prev')}
             </button>
             <span className="text-sm font-semibold text-[#4a5162] dark:text-neutral-400">
-              Page {pageParam} of {totalPages}
+              {t('pagination_page')} <span className="font-mono tabular-nums">{pageParam}</span> {t('pagination_of')}{' '}
+              <span className="font-mono tabular-nums">{totalPages}</span>
             </span>
             <button
               onClick={() => handlePageChange(pageParam + 1)}
               disabled={pageParam >= totalPages}
               className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              Next <ChevronRight className="h-4 w-4" />
+              {t('pagination_next')} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         )}

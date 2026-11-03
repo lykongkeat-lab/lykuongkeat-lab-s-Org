@@ -11,9 +11,11 @@ import {
   BookOpen, 
   User, 
   Mail, 
-  Terminal 
+  Terminal,
+  Languages
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
+import { useLanguage } from '../lib/LanguageContext';
 import { getSiteSettings } from '../lib/api';
 
 export default function Header() {
@@ -32,6 +34,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { isAdmin, user } = useAuth();
+  const { lang, toggleLang, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -75,10 +78,10 @@ export default function Header() {
   };
 
   const navLinks = [
-    { label: 'Articles', path: '/', icon: BookOpen },
-    { label: 'CV', path: '/cv', icon: FileText },
-    { label: 'About', path: '/about', icon: User },
-    { label: 'Contact', path: '/contact', icon: Mail },
+    { label: t('nav_articles'), path: '/', icon: BookOpen },
+    { label: t('nav_cv'), path: '/cv', icon: FileText },
+    { label: t('nav_about'), path: '/about', icon: User },
+    { label: t('nav_contact'), path: '/contact', icon: Mail },
   ];
 
   const siteTitle = siteSettings?.site_title || 'Ly Kuongkeat';
@@ -127,12 +130,23 @@ export default function Header() {
         </nav>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
+          {/* One-Click Bilingual Switcher (ភាសាខ្មែរ / English) */}
+          <button
+            onClick={toggleLang}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#2bb8d6]/40 bg-[#0b235e] px-3 py-2 text-xs font-bold text-white shadow-2xs transition-all hover:border-[#3cd0a8] hover:bg-[#102d75]"
+            aria-label="Switch Language (ភាសាខ្មែរ / English)"
+            title={lang === 'en' ? 'ប្តូរទៅភាសាខ្មែរ (Switch to Khmer)' : 'Switch to English (ប្តូរទៅភាសាអង់គ្លេស)'}
+          >
+            <Languages className="h-3.5 w-3.5 text-[#3cd0a8]" />
+            <span>{lang === 'en' ? 'ភាសាខ្មែរ' : 'English'}</span>
+          </button>
+
           {/* Search Trigger with warm amber glow */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="rounded-xl border border-amber-400/25 bg-[#2a2723] p-2.5 text-[#f6c453] shadow-[0_0_16px_rgba(245,158,11,0.25)] transition-all hover:border-amber-400/50 hover:bg-[#353028] hover:text-amber-300"
-            aria-label="Search articles"
+            aria-label={t('search_btn')}
           >
             <Search className="h-4 w-4" />
           </button>
@@ -141,8 +155,8 @@ export default function Header() {
           <button
             onClick={toggleTheme}
             className="rounded-xl border border-amber-400/20 bg-[#232429] p-2.5 text-[#f6c453] shadow-[0_0_12px_rgba(245,158,11,0.15)] transition-all hover:border-amber-400/40 hover:bg-[#2e2f36] hover:text-amber-300"
-            aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label={theme === 'dark' ? t('theme_light') : t('theme_dark')}
+            title={theme === 'dark' ? t('theme_light') : t('theme_dark')}
           >
             {theme === 'dark' ? (
               <Sun className="h-4 w-4 text-[#f6c453]" />
@@ -152,23 +166,13 @@ export default function Header() {
           </button>
 
           {/* Admin Pill Button with Blue-to-Emerald Gradient */}
-          {isAdmin ? (
-            <Link
-              to="/admin"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-sm transition-all hover:brightness-110"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Admin
-            </Link>
-          ) : (
-            <Link
-              to={user ? '/admin' : '/admin/login'}
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-sm transition-all hover:brightness-110"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Admin
-            </Link>
-          )}
+          <Link
+            to={isAdmin || user ? '/admin' : '/admin/login'}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-sm transition-all hover:brightness-110"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            {t('nav_admin')}
+          </Link>
 
           {/* Mobile Menu Hamburger */}
           <button
@@ -191,7 +195,7 @@ export default function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search articles by title, keywords..."
+                placeholder={t('search_placeholder')}
                 autoFocus
                 className="w-full rounded-xl border border-[#1a3880] bg-[#0b235e] py-2 pl-10 pr-4 text-sm text-white placeholder-slate-400 focus:border-[#2bb8d6] focus:outline-hidden"
               />
@@ -200,7 +204,7 @@ export default function Header() {
               type="submit"
               className="rounded-xl bg-gradient-to-r from-[#1d63ed] to-[#2eb886] px-4 py-2 text-sm font-bold text-white transition-all hover:brightness-110"
             >
-              Search
+              {t('search_btn')}
             </button>
             <button
               type="button"
@@ -243,7 +247,7 @@ export default function Header() {
             className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-3 py-2.5 text-base font-bold text-white"
           >
             <ShieldCheck className="h-5 w-5" />
-            Admin Portal
+            {t('nav_admin_portal')}
           </Link>
         </div>
       )}

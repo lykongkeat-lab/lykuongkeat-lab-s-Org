@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Github, Send, Facebook, Mail, Shield } from 'lucide-react';
+import { Terminal, Github, Send, Facebook, Twitter, Mail, Shield } from 'lucide-react';
 import AdSlot from './AdSlot';
+import { useLanguage } from '../lib/LanguageContext';
 import { getSiteSettings, getCategories } from '../lib/api';
+
+function TikTokIcon({ className = 'h-5 w-5' }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   const [siteSettings, setSiteSettings] = useState(null);
   const [categories, setCategories] = useState([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     let mounted = true;
@@ -29,7 +44,9 @@ export default function Footer() {
     'Software Engineer & Web Developer — writing about real-world code and engineering.';
 
   const telegramUrl = siteSettings?.social_telegram || siteSettings?.social_linkedin;
-  const facebookUrl = siteSettings?.social_facebook || siteSettings?.social_twitter;
+  const facebookUrl = siteSettings?.social_facebook;
+  const twitterUrl = siteSettings?.social_twitter;
+  const tiktokUrl = siteSettings?.social_tiktok;
 
   return (
     <footer className="mt-20 border-t border-[#16306b] bg-[#041236] text-slate-300 transition-colors dark:border-neutral-800 dark:bg-neutral-950">
@@ -91,6 +108,30 @@ export default function Footer() {
                   <Facebook className="h-5 w-5" />
                 </a>
               )}
+              {twitterUrl && (
+                <a
+                  href={twitterUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-300 transition hover:text-[#3cd0a8]"
+                  aria-label="Twitter / X"
+                  title="Twitter / X"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+              )}
+              {tiktokUrl && (
+                <a
+                  href={tiktokUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-300 transition hover:text-[#3cd0a8]"
+                  aria-label="TikTok"
+                  title="TikTok"
+                >
+                  <TikTokIcon className="h-5 w-5" />
+                </a>
+              )}
               <Link
                 to="/contact"
                 className="text-slate-300 transition hover:text-[#3cd0a8]"
@@ -105,27 +146,27 @@ export default function Footer() {
           {/* Quick Links */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Navigation
+              {t('footer_navigation')}
             </h4>
             <ul className="space-y-2 text-sm text-slate-300">
               <li>
                 <Link to="/" className="transition hover:text-[#3cd0a8]">
-                  Articles
+                  {t('nav_articles')}
                 </Link>
               </li>
               <li>
                 <Link to="/cv" className="transition hover:text-[#3cd0a8]">
-                  Curriculum Vitae (CV)
+                  {t('footer_cv')}
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="transition hover:text-[#3cd0a8]">
-                  About Me
+                  {t('footer_about')}
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="transition hover:text-[#3cd0a8]">
-                  Contact Form
+                  {t('footer_contact')}
                 </Link>
               </li>
             </ul>
@@ -134,7 +175,7 @@ export default function Footer() {
           {/* Categories */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Categories
+              {t('sidebar_categories')}
             </h4>
             <ul className="space-y-2 text-sm text-slate-300">
               {categories.map((cat) => (
@@ -148,7 +189,7 @@ export default function Footer() {
                 </li>
               ))}
               {categories.length === 0 && (
-                <li className="text-xs text-slate-400">No categories yet</li>
+                <li className="text-xs text-slate-400">{t('footer_no_categories')}</li>
               )}
             </ul>
           </div>
@@ -156,7 +197,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-slate-300 sm:flex-row">
-          <p>© {new Date().getFullYear()} <span className="font-semibold text-white">{siteTitle}</span>. All rights reserved.</p>
+          <p>
+            © <span className="font-mono tabular-nums">{new Date().getFullYear()}</span>{' '}
+            <span className="font-semibold text-white">{siteTitle}</span>. {t('footer_rights')}
+          </p>
 
           <div className="flex items-center gap-4">
             <Link
@@ -164,7 +208,7 @@ export default function Footer() {
               className="inline-flex items-center gap-1 font-medium text-[#3cd0a8] transition hover:underline"
             >
               <Shield className="h-3.5 w-3.5" />
-              Admin Portal
+              {t('nav_admin_portal')}
             </Link>
           </div>
         </div>

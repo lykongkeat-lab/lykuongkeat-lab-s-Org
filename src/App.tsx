@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './lib/AuthContext';
+import { LanguageProvider } from './lib/LanguageContext';
 
 // Public Pages
 import Home from './pages/Home';
@@ -28,116 +29,118 @@ import SettingsAdmin from './pages/admin/SettingsAdmin';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:slug" element={<PostDetail />} />
-          <Route path="/category/:slug" element={<CategoryPage />} />
-          <Route path="/tag/:slug" element={<TagPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/cv" element={<CVPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/post/:slug" element={<PostDetail />} />
+            <Route path="/category/:slug" element={<CategoryPage />} />
+            <Route path="/tag/:slug" element={<TagPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/cv" element={<CVPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
-          {/* Admin Auth Route */}
-          <Route path="/admin/login" element={<Login />} />
+            {/* Admin Auth Route */}
+            <Route path="/admin/login" element={<Login />} />
 
-          {/* Admin Protected Routes */}
-          <Route
-            path="/admin"
-            element={
-              <RequireAdmin>
-                <Dashboard />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/posts"
-            element={
-              <RequireAdmin>
-                <PostsAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/posts/new"
-            element={
-              <RequireAdmin>
-                <PostEditor />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/posts/edit/:id"
-            element={
-              <RequireAdmin>
-                <PostEditor />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/categories"
-            element={
-              <RequireAdmin>
-                <CategoriesAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/comments"
-            element={
-              <RequireAdmin>
-                <CommentsAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/ads"
-            element={
-              <RequireAdmin>
-                <AdsAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/media"
-            element={
-              <RequireAdmin>
-                <MediaAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/cv"
-            element={
-              <RequireAdmin>
-                <CVAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/messages"
-            element={
-              <RequireAdmin>
-                <MessagesAdmin />
-              </RequireAdmin>
-            }
-          />
-          <Route
-            path="/admin/settings"
-            element={
-              <RequireAdmin>
-                <SettingsAdmin />
-              </RequireAdmin>
-            }
-          />
+            {/* Admin Protected Routes */}
+            <Route
+              path="/admin"
+              element={
+                <RequireAdmin>
+                  <Dashboard />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/posts"
+              element={
+                <RequireAdmin>
+                  <PostsAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/posts/new"
+              element={
+                <RequireAdmin>
+                  <PostEditor />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/posts/edit/:id"
+              element={
+                <RequireAdmin>
+                  <PostEditor />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <RequireAdmin>
+                  <CategoriesAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/comments"
+              element={
+                <RequireAdmin>
+                  <CommentsAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/ads"
+              element={
+                <RequireAdmin>
+                  <AdsAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/media"
+              element={
+                <RequireAdmin>
+                  <MediaAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/cv"
+              element={
+                <RequireAdmin>
+                  <CVAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/messages"
+              element={
+                <RequireAdmin>
+                  <MessagesAdmin />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <RequireAdmin>
+                  <SettingsAdmin />
+                </RequireAdmin>
+              }
+            />
 
-          {/* Fallback Route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+            {/* Fallback Route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

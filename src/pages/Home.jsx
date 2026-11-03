@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Calendar, Clock, Eye, ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import Layout from '../components/Layout';
+import { useLanguage } from '../lib/LanguageContext';
 import { getPosts } from '../lib/api';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
+  const { t } = useLanguage();
 
   const [posts, setPosts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -33,7 +35,6 @@ export default function Home() {
           setTotalPages(res.totalPages || 1);
           setTotalCount(res.count || 0);
 
-          // Find a featured post for the top banner on page 1
           if (pageParam === 1 && res.data && res.data.length > 0) {
             const featured = res.data.find((p) => p.is_featured) || res.data[0];
             setFeaturedPost(featured);
@@ -62,7 +63,6 @@ export default function Home() {
     }
   };
 
-  // Filter out featured post from regular feed only if it is displayed on page 1
   const displayPosts =
     pageParam === 1 && featuredPost
       ? posts.filter((p) => p.id !== featuredPost.id)
@@ -72,24 +72,24 @@ export default function Home() {
     <Layout>
       <div className="space-y-10">
         
-        {/* Welcome Section on #ffffff light mode background */}
+        {/* Welcome Section */}
         <div className="space-y-4">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1.5 text-xs font-semibold text-[#6b4c1b] shadow-2xs dark:bg-amber-950/60 dark:text-amber-300">
             <Sparkles className="h-3.5 w-3.5 text-[#7c581f] dark:text-amber-400" />
-            Engineering &amp; Web Development
+            {t('hero_badge')}
           </span>
 
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl leading-[1.15]">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl leading-[1.2]">
             <span className="block text-[#111318] dark:text-white">
-              Writing about code, architecture,
+              {t('hero_title_1')}
             </span>
             <span className="block text-[#0d47e1] dark:text-[#38bdf8]">
-              and real-world problems
+              {t('hero_title_2')}
             </span>
           </h1>
 
           <p className="pt-1 text-base sm:text-lg leading-relaxed text-[#2c313c] dark:text-neutral-400">
-            Explore hands-on technical tutorials, production post-mortems, and frontend/backend deeps.
+            {t('hero_subtitle')}
           </p>
 
           {/* Blue -> Teal -> Orange Gradient Divider Line */}
@@ -114,7 +114,7 @@ export default function Home() {
               <div className={`${featuredPost.cover_url ? 'lg:col-span-7' : 'lg:col-span-12'} space-y-3`}>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-md bg-gradient-to-r from-[#1d63ed] to-[#2eb886] px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white">
-                    Featured
+                    {t('featured_badge')}
                   </span>
                   {featuredPost.categories?.name && (
                     <span className="rounded-md bg-[#efe4c8] px-2.5 py-0.5 text-xs font-semibold text-[#6b4c1b] dark:bg-neutral-800 dark:text-neutral-300">
@@ -130,11 +130,11 @@ export default function Home() {
                 </Link>
 
                 <p className="text-sm leading-relaxed text-[#2c313c] line-clamp-3 dark:text-neutral-300">
-                  {featuredPost.excerpt || 'Read the full article for in-depth insights and practical implementations.'}
+                  {featuredPost.excerpt}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500 pt-2 dark:text-neutral-400">
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-1.5 font-mono tabular-nums">
                     <Calendar className="h-3.5 w-3.5 text-[#0d47e1] dark:text-neutral-400" />
                     {featuredPost.published_at
                       ? new Date(featuredPost.published_at).toLocaleDateString('en-US', {
@@ -142,15 +142,15 @@ export default function Home() {
                           day: 'numeric',
                           year: 'numeric',
                         })
-                      : 'Recently published'}
+                      : t('recently_published')}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-[#10b981]" />
-                    {featuredPost.reading_time || 3} min read
+                    <span className="font-mono tabular-nums">{featuredPost.reading_time || 3}</span> {t('min_read')}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Eye className="h-3.5 w-3.5 text-[#d9822b]" />
-                    {featuredPost.views || 0} views
+                    <span className="font-mono tabular-nums">{featuredPost.views || 0}</span> {t('views')}
                   </span>
                 </div>
 
@@ -159,7 +159,7 @@ export default function Home() {
                     to={`/post/${featuredPost.slug}`}
                     className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:brightness-110"
                   >
-                    Read article <ArrowRight className="h-4 w-4" />
+                    {t('read_article')} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -171,7 +171,12 @@ export default function Home() {
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-[#111318] dark:text-white">
-              Latest Articles {totalCount > 0 && <span className="text-xs font-semibold text-slate-500">({totalCount})</span>}
+              {t('latest_articles')}{' '}
+              {totalCount > 0 && (
+                <span className="font-mono tabular-nums text-xs font-semibold text-slate-500">
+                  ({totalCount})
+                </span>
+              )}
             </h2>
           </div>
 
@@ -191,17 +196,17 @@ export default function Home() {
           ) : displayPosts.length === 0 ? (
             <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
               <h3 className="text-lg font-bold text-[#111318] dark:text-white">
-                No articles published yet
+                {t('no_articles_title')}
               </h3>
               <p className="mt-2 text-sm text-[#2c313c] dark:text-neutral-400">
-                Check back soon or sign in to the{' '}
+                {t('no_articles_prefix')}{' '}
                 <Link
                   to="/admin"
                   className="inline-block rounded-md bg-gradient-to-r from-[#4f9cf9] via-[#5fd3bc] to-[#e69d45] px-2 py-0.5 font-semibold text-[#111318] transition hover:brightness-105"
                 >
-                  Admin Dashboard
+                  {t('admin_dashboard')}
                 </Link>{' '}
-                to write the first post.
+                {t('no_articles_suffix')}
               </p>
             </div>
           ) : (
@@ -234,19 +239,19 @@ export default function Home() {
                           </Link>
                         )}
                         <span className="text-xs text-slate-400">•</span>
-                        <span className="text-xs font-medium text-slate-500 dark:text-neutral-400">
+                        <span className="font-mono tabular-nums text-xs font-medium text-slate-500 dark:text-neutral-400">
                           {post.published_at
                             ? new Date(post.published_at).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                               })
-                            : 'Draft'}
+                            : t('draft')}
                         </span>
                         <span className="text-xs text-slate-400">•</span>
                         <span className="flex items-center gap-1 text-xs font-medium text-[#0d47e1] dark:text-neutral-400">
                           <Clock className="h-3 w-3" />
-                          {post.reading_time || 3} min
+                          <span className="font-mono tabular-nums">{post.reading_time || 3}</span> {t('min_short')}
                         </span>
                       </div>
 
@@ -257,18 +262,18 @@ export default function Home() {
                       </Link>
 
                       <p className="text-sm leading-relaxed text-[#2c313c] dark:text-neutral-400 line-clamp-2">
-                        {post.excerpt || 'Click to read full article...'}
+                        {post.excerpt}
                       </p>
 
                       {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          {post.tags.map((t) => (
+                          {post.tags.map((tItem) => (
                             <Link
-                              key={t.id}
-                              to={`/tag/${t.slug}`}
+                              key={tItem.id}
+                              to={`/tag/${tItem.slug}`}
                               className="inline-flex items-center gap-0.5 text-xs font-semibold text-[#1595d6] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:text-[#38bdf8]"
                             >
-                              #{t.name}
+                              #{tItem.name}
                             </Link>
                           ))}
                         </div>
@@ -289,12 +294,14 @@ export default function Home() {
               disabled={pageParam <= 1}
               className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-50 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              <ChevronLeft className="h-4 w-4" /> Previous
+              <ChevronLeft className="h-4 w-4" /> {t('pagination_prev')}
             </button>
 
             <span className="text-sm text-[#2c313c] dark:text-neutral-400">
-              Page <span className="font-bold text-[#0d47e1] dark:text-white">{pageParam}</span> of{' '}
-              <span className="font-bold text-[#0d47e1] dark:text-white">{totalPages}</span>
+              {t('pagination_page')}{' '}
+              <span className="font-mono tabular-nums font-bold text-[#0d47e1] dark:text-white">{pageParam}</span>{' '}
+              {t('pagination_of')}{' '}
+              <span className="font-mono tabular-nums font-bold text-[#0d47e1] dark:text-white">{totalPages}</span>
             </span>
 
             <button
@@ -302,7 +309,7 @@ export default function Home() {
               disabled={pageParam >= totalPages}
               className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-50 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              Next <ChevronRight className="h-4 w-4" />
+              {t('pagination_next')} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         )}

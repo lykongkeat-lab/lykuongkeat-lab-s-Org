@@ -14,10 +14,12 @@ import {
 } from 'lucide-react';
 import Layout from '../components/Layout';
 import AdSlot from '../components/AdSlot';
+import { useLanguage } from '../lib/LanguageContext';
 import { getPostBySlug, getPostComments, createComment } from '../lib/api';
 
 export default function PostDetail() {
   const { slug } = useParams();
+  const { t } = useLanguage();
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -99,7 +101,6 @@ export default function PostDetail() {
           ? post.content
           : marked.parse(post.content);
 
-      // DOMPurify XSS filter
       return DOMPurify.sanitize(rawHtml, {
         ADD_TAGS: ['iframe'],
         ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
@@ -131,16 +132,16 @@ export default function PostDetail() {
     return (
       <Layout>
         <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 className="text-2xl font-bold text-[#111318] dark:text-white">Article Not Found</h2>
+          <h2 className="text-2xl font-bold text-[#111318] dark:text-white">{t('article_not_found')}</h2>
           <p className="mt-2 text-sm text-[#4a5162] dark:text-neutral-400">
-            The article you are looking for does not exist or may have been unposted.
+            {t('article_not_found_desc')}
           </p>
           <div className="mt-6">
             <Link
               to="/"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-sm font-bold text-white shadow-sm hover:brightness-110"
             >
-              <ArrowLeft className="h-4 w-4" /> Return to Articles
+              <ArrowLeft className="h-4 w-4" /> {t('return_to_articles')}
             </Link>
           </div>
         </div>
@@ -157,7 +158,7 @@ export default function PostDetail() {
             to="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d47e1] hover:underline dark:text-neutral-400 dark:hover:text-white"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
+            <ArrowLeft className="h-3.5 w-3.5" /> {t('back_to_articles')}
           </Link>
         </div>
 
@@ -173,7 +174,7 @@ export default function PostDetail() {
               </Link>
             )}
             <span className="text-xs text-slate-300">•</span>
-            <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
+            <span className="flex items-center gap-1 font-mono tabular-nums text-xs font-medium text-[#5a6275] dark:text-neutral-400">
               <Calendar className="h-3.5 w-3.5 text-[#0d47e1] dark:text-neutral-400" />
               {post.published_at
                 ? new Date(post.published_at).toLocaleDateString('en-US', {
@@ -181,17 +182,17 @@ export default function PostDetail() {
                     day: 'numeric',
                     year: 'numeric',
                   })
-                : 'Draft'}
+                : t('draft')}
             </span>
             <span className="text-xs text-slate-300">•</span>
             <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
               <Clock className="h-3.5 w-3.5 text-[#0d47e1]" />
-              {post.reading_time || 3} min read
+              <span className="font-mono tabular-nums">{post.reading_time || 3}</span> {t('min_read')}
             </span>
             <span className="text-xs text-slate-300">•</span>
             <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
               <Eye className="h-3.5 w-3.5 text-[#0d47e1]" />
-              {post.views || 0} views
+              <span className="font-mono tabular-nums">{post.views || 0}</span> {t('views')}
             </span>
           </div>
 
@@ -225,7 +226,7 @@ export default function PostDetail() {
                 {post.profiles?.full_name || 'Ly Kuongkeat'}
               </p>
               <p className="text-xs font-medium text-[#0d47e1] dark:text-neutral-400">
-                Author &amp; Software Engineer
+                {t('author_role')}
               </p>
             </div>
           </div>
@@ -263,15 +264,15 @@ export default function PostDetail() {
           <div className="border-t border-[#e2e5ec] pt-6 dark:border-neutral-800">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold text-[#111318] dark:text-neutral-400">
-                Tags:
+                {t('tags_label')}
               </span>
-              {post.tags.map((t) => (
+              {post.tags.map((tItem) => (
                 <Link
-                  key={t.id}
-                  to={`/tag/${t.slug}`}
+                  key={tItem.id}
+                  to={`/tag/${tItem.slug}`}
                   className="rounded-md border border-[#e2e5ec] bg-[#ffffff] px-2.5 py-1 text-xs font-semibold text-[#3f4654] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 >
-                  #{t.name}
+                  #{tItem.name}
                 </Link>
               ))}
             </div>
@@ -283,7 +284,8 @@ export default function PostDetail() {
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[#0d47e1] dark:text-[#05dcef]" />
             <h3 className="text-xl font-bold text-[#111318] dark:text-white">
-              Comments ({comments.length})
+              {t('comments_title')}{' '}
+              <span className="font-mono tabular-nums">({comments.length})</span>
             </h3>
           </div>
 
@@ -291,7 +293,7 @@ export default function PostDetail() {
           <div className="space-y-4">
             {comments.length === 0 ? (
               <p className="text-sm italic text-[#5a6275] dark:text-neutral-400">
-                No comments yet. Be the first to share your thoughts!
+                {t('no_comments')}
               </p>
             ) : (
               comments.map((comment) => (
@@ -303,7 +305,7 @@ export default function PostDetail() {
                     <span className="text-sm font-bold text-[#111318] dark:text-white">
                       {comment.author_name}
                     </span>
-                    <span className="text-xs text-[#5a6275]">
+                    <span className="font-mono tabular-nums text-xs text-[#5a6275]">
                       {new Date(comment.created_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -322,17 +324,17 @@ export default function PostDetail() {
           {/* Add Comment Form */}
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
             <h4 className="text-base font-bold text-[#111318] dark:text-white mb-1">
-              Leave a Comment
+              {t('leave_comment')}
             </h4>
             <p className="text-xs text-[#4a5162] dark:text-neutral-400 mb-4">
-              Your email will remain private. Comments are reviewed by the author before appearing publicly.
+              {t('comment_privacy_note')}
             </p>
 
             <form onSubmit={handleCommentSubmit} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
-                    Your Name *
+                    {t('your_name')}
                   </label>
                   <input
                     type="text"
@@ -346,7 +348,7 @@ export default function PostDetail() {
 
                 <div>
                   <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
-                    Your Email *
+                    {t('your_email')}
                   </label>
                   <input
                     type="email"
@@ -361,14 +363,14 @@ export default function PostDetail() {
 
               <div>
                 <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
-                  Comment *
+                  {t('comment_label')}
                 </label>
                 <textarea
                   required
                   rows={4}
                   value={commentForm.content}
                   onChange={(e) => setCommentForm({ ...commentForm, content: e.target.value })}
-                  placeholder="Share your thoughts, suggestions, or questions..."
+                  placeholder={t('comment_placeholder')}
                   className="w-full rounded-lg border border-[#d5dae2] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                 />
               </div>
@@ -380,7 +382,7 @@ export default function PostDetail() {
                   className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:brightness-110 disabled:opacity-60"
                 >
                   <Send className="h-4 w-4" />
-                  {commentStatus.state === 'submitting' ? 'Submitting...' : 'Post Comment'}
+                  {commentStatus.state === 'submitting' ? t('submitting') : t('post_comment')}
                 </button>
               </div>
 

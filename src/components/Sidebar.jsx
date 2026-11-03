@@ -4,6 +4,7 @@ import {
   Github, 
   Send, 
   Facebook, 
+  Twitter, 
   Mail, 
   Folder, 
   Tag as TagIcon, 
@@ -13,6 +14,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import AdSlot from './AdSlot';
+import { useLanguage } from '../lib/LanguageContext';
 import { 
   getCategories, 
   getTags, 
@@ -21,11 +23,25 @@ import {
   subscribeNewsletter 
 } from '../lib/api';
 
+function TikTokIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+  );
+}
+
 export default function Sidebar() {
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
   const [recentPosts, setRecentPosts] = useState([]);
   const [siteSettings, setSiteSettings] = useState(null);
+  const { t } = useLanguage();
 
   // Newsletter form state
   const [email, setEmail] = useState('');
@@ -91,7 +107,9 @@ export default function Sidebar() {
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
   const telegramUrl = siteSettings?.social_telegram || siteSettings?.social_linkedin;
-  const facebookUrl = siteSettings?.social_facebook || siteSettings?.social_twitter;
+  const facebookUrl = siteSettings?.social_facebook;
+  const twitterUrl = siteSettings?.social_twitter;
+  const tiktokUrl = siteSettings?.social_tiktok;
 
   return (
     <aside className="w-full space-y-8">
@@ -119,7 +137,7 @@ export default function Sidebar() {
           </p>
 
           {/* Social Links */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
             {siteSettings?.social_github && (
               <a
                 href={siteSettings.social_github}
@@ -156,6 +174,30 @@ export default function Sidebar() {
                 <Facebook className="h-4 w-4" />
               </a>
             )}
+            {twitterUrl && (
+              <a
+                href={twitterUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#1da1f2] transition hover:bg-[#1da1f2] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                aria-label="Twitter / X Profile"
+                title="Twitter / X"
+              >
+                <Twitter className="h-4 w-4" />
+              </a>
+            )}
+            {tiktokUrl && (
+              <a
+                href={tiktokUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#111318] transition hover:bg-[#111318] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                aria-label="TikTok Profile"
+                title="TikTok"
+              >
+                <TikTokIcon className="h-4 w-4" />
+              </a>
+            )}
             <Link
               to="/contact"
               className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#2eb886] transition hover:bg-[#2eb886] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
@@ -171,7 +213,7 @@ export default function Sidebar() {
               to="/cv"
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:brightness-110"
             >
-              View Full CV &amp; Experience
+              {t('sidebar_view_cv')}
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -185,10 +227,10 @@ export default function Sidebar() {
       <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900/50">
         <div className="mb-2 flex items-center gap-2 text-[#111318] dark:text-white">
           <Mail className="h-5 w-5 text-[#0d47e1] dark:text-[#3cd0a8]" />
-          <h3 className="text-base font-bold">Tech Newsletter</h3>
+          <h3 className="text-base font-bold">{t('sidebar_newsletter_title')}</h3>
         </div>
         <p className="mb-4 text-xs leading-relaxed text-[#2c313c] dark:text-neutral-400">
-          Get notified whenever I publish a new article about web development or real production solutions. No spam, ever.
+          {t('sidebar_newsletter_desc')}
         </p>
 
         <form onSubmit={handleNewsletterSubmit} className="space-y-2.5">
@@ -196,7 +238,7 @@ export default function Sidebar() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@domain.com"
+            placeholder={t('sidebar_newsletter_placeholder')}
             required
             className="w-full rounded-xl border border-[#d5dae5] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
           />
@@ -205,7 +247,7 @@ export default function Sidebar() {
             disabled={subStatus.state === 'loading'}
             className="w-full rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:brightness-110 disabled:opacity-60"
           >
-            {subStatus.state === 'loading' ? 'Subscribing...' : 'Subscribe'}
+            {subStatus.state === 'loading' ? t('sidebar_subscribing') : t('sidebar_subscribe')}
           </button>
         </form>
 
@@ -228,7 +270,7 @@ export default function Sidebar() {
       {recentPosts.length > 0 && (
         <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
           <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#6b4c1b] dark:text-neutral-400">
-            Recent Articles
+            {t('sidebar_recent')}
           </h3>
           <div className="space-y-4">
             {recentPosts.map((post) => (
@@ -241,19 +283,19 @@ export default function Sidebar() {
                   {post.title}
                 </h4>
                 <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-neutral-400">
-                  <span>
+                  <span className="font-mono tabular-nums">
                     {post.published_at
                       ? new Date(post.published_at).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric',
                         })
-                      : 'Recent'}
+                      : t('recently_published')}
                   </span>
                   <span>•</span>
                   <span className="flex items-center gap-0.5 text-[#0d47e1] dark:text-neutral-400">
                     <Clock className="h-3 w-3" />
-                    {post.reading_time || 3} min
+                    <span className="font-mono tabular-nums">{post.reading_time || 3}</span> {t('min_short')}
                   </span>
                 </div>
               </Link>
@@ -268,7 +310,7 @@ export default function Sidebar() {
           <div className="mb-4 flex items-center gap-2">
             <Folder className="h-4 w-4 text-[#0d47e1] dark:text-[#3cd0a8]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#111318] dark:text-neutral-400">
-              Categories
+              {t('sidebar_categories')}
             </h3>
           </div>
           <ul className="space-y-2">
@@ -293,7 +335,7 @@ export default function Sidebar() {
           <div className="mb-3 flex items-center gap-2">
             <TagIcon className="h-4 w-4 text-[#0d47e1] dark:text-[#3cd0a8]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#111318] dark:text-neutral-400">
-              Tags
+              {t('sidebar_tags')}
             </h3>
           </div>
           <div className="flex flex-wrap gap-2">

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Clock, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import Layout from '../components/Layout';
+import { useLanguage } from '../lib/LanguageContext';
 import { getPosts } from '../lib/api';
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
+  const { t } = useLanguage();
 
   const [inputVal, setInputVal] = useState(initialQuery);
   const [posts, setPosts] = useState([]);
@@ -83,11 +85,11 @@ export default function SearchPage() {
             to="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d47e1] hover:underline dark:text-neutral-400 dark:hover:text-white mb-4"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
+            <ArrowLeft className="h-3.5 w-3.5" /> {t('back_to_articles')}
           </Link>
 
           <h1 className="text-3xl font-extrabold tracking-tight text-[#111318] dark:text-white sm:text-4xl mb-6">
-            Search Articles
+            {t('search_title')}
           </h1>
 
           {/* Search Form Bar */}
@@ -98,7 +100,7 @@ export default function SearchPage() {
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
-                placeholder="Search by article title or keywords..."
+                placeholder={t('search_input_placeholder')}
                 className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] py-3 pl-11 pr-4 text-base text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
               />
             </div>
@@ -106,13 +108,17 @@ export default function SearchPage() {
               type="submit"
               className="rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-110"
             >
-              Search
+              {t('search_btn')}
             </button>
           </form>
 
           {initialQuery && (
             <p className="mt-3 text-sm text-[#4a5162] dark:text-neutral-400">
-              Found <span className="font-bold text-[#0d47e1] dark:text-white">{totalCount}</span> results for &ldquo;{initialQuery}&rdquo;
+              {t('search_found')}{' '}
+              <span className="font-mono tabular-nums font-bold text-[#0d47e1] dark:text-white">
+                {totalCount}
+              </span>{' '}
+              {t('search_results_for')} &ldquo;{initialQuery}&rdquo;
             </p>
           )}
         </div>
@@ -131,16 +137,16 @@ export default function SearchPage() {
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <Search className="mx-auto h-8 w-8 text-[#0d47e1] mb-2" />
             <p className="text-[#2c313c] font-medium dark:text-neutral-400 text-sm">
-              Type keywords above to search for articles.
+              {t('search_empty_prompt')}
             </p>
           </div>
         ) : posts.length === 0 ? (
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <h3 className="text-base font-bold text-[#111318] dark:text-white">
-              No matching articles found
+              {t('search_no_match')}
             </h3>
             <p className="mt-1 text-sm text-[#4a5162] dark:text-neutral-400">
-              Try different keywords or check out categories from the sidebar.
+              {t('search_no_match_desc')}
             </p>
           </div>
         ) : (
@@ -169,19 +175,19 @@ export default function SearchPage() {
                         </span>
                       )}
                       <span>•</span>
-                      <span>
+                      <span className="font-mono tabular-nums">
                         {post.published_at
                           ? new Date(post.published_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               year: 'numeric',
                             })
-                          : 'Draft'}
+                          : t('draft')}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1 font-medium text-[#5a6275] dark:text-neutral-400">
                         <Clock className="h-3 w-3 text-[#0d47e1]" />
-                        {post.reading_time || 3} min
+                        <span className="font-mono tabular-nums">{post.reading_time || 3}</span> {t('min_short')}
                       </span>
                     </div>
 
@@ -192,7 +198,7 @@ export default function SearchPage() {
                     </Link>
 
                     <p className="text-sm text-[#4a5162] line-clamp-2 dark:text-neutral-400">
-                      {post.excerpt || 'Read more...'}
+                      {post.excerpt}
                     </p>
                   </div>
                 </div>
@@ -209,17 +215,18 @@ export default function SearchPage() {
               disabled={pageParam <= 1}
               className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              <ChevronLeft className="h-4 w-4" /> Previous
+              <ChevronLeft className="h-4 w-4" /> {t('pagination_prev')}
             </button>
             <span className="text-sm font-semibold text-[#4a5162] dark:text-neutral-400">
-              Page {pageParam} of {totalPages}
+              {t('pagination_page')} <span className="font-mono tabular-nums">{pageParam}</span> {t('pagination_of')}{' '}
+              <span className="font-mono tabular-nums">{totalPages}</span>
             </span>
             <button
               onClick={() => handlePageChange(pageParam + 1)}
               disabled={pageParam >= totalPages}
               className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
-              Next <ChevronRight className="h-4 w-4" />
+              {t('pagination_next')} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         )}
