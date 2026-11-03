@@ -724,6 +724,83 @@ export async function deleteMediaRecord(id) {
   }
 }
 
+function compressImageToDataUrl(file, maxSize = 512, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        resolve(canvas.toDataURL(outputType, quality));
+      };
+      img.onerror = () => reject(new Error('Failed to load image for processing'));
+      img.src = event.target.result;
+    };
+    reader.onerror = () => reject(new Error('Failed to read image file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+export async function uploadMediaFile(file, altText = '') {
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const token = session?.access_token;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('alt_text', altText || file.name);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: formData,
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      const publicUrl = result.public_url || result.media?.public_url;
+      if (publicUrl) {
+        return { public_url: publicUrl, media: result.media || null, source: 'r2' };
+      }
+    }
+  } catch (err) {
+    console.warn('R2 worker upload fallback triggered:', err.message);
+  }
+
+  // Fallback for images when Worker R2 endpoint is not reachable (e.g. local dev)
+  if (file.type && file.type.startsWith('image/')) {
+    const dataUrl = await compressImageToDataUrl(file);
+    return { public_url: dataUrl, media: null, source: 'local' };
+  }
+
+  throw new Error('Upload failed. Ensure Cloudflare Worker R2 endpoint is configured.');
+}
+
+
 /**
  * ============================================================================
  * CV API (cv_sections and cv_items)
