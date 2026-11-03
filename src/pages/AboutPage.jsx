@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Github, Linkedin, Twitter, Mail, ArrowRight, Code, Server, Cpu } from 'lucide-react';
+import { Github, Linkedin, Twitter, ArrowRight, Code, Server, Cpu } from 'lucide-react';
 import Layout from '../components/Layout';
 import { getSiteSettings } from '../lib/api';
 
@@ -32,7 +32,7 @@ export default function AboutPage() {
         {/* Intro Section */}
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl ring-4 ring-neutral-100 dark:ring-neutral-800">
+            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl ring-4 ring-[#2bb8d6] dark:ring-neutral-800">
               <img
                 src={authorAvatar}
                 alt={authorName}
@@ -40,10 +40,10 @@ export default function AboutPage() {
               />
             </div>
             <div className="space-y-2 text-center sm:text-left">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-                About {authorName}
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#111318] dark:text-white">
+                About <span className="text-[#0d47e1] dark:text-[#05dcef]">{authorName}</span>
               </h1>
-              <p className="text-base font-semibold text-emerald-600 dark:text-emerald-400">
+              <p className="inline-block rounded-full bg-[#efe4c8] px-3.5 py-0.5 text-sm font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/15 dark:text-[#05dcef]">
                 {authorTitle}
               </p>
               <div className="flex items-center justify-center sm:justify-start gap-3 pt-1">
@@ -52,7 +52,7 @@ export default function AboutPage() {
                     href={settings.social_github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                    className="text-[#4a5162] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:text-white"
                   >
                     <Github className="h-4 w-4" />
                   </a>
@@ -62,7 +62,7 @@ export default function AboutPage() {
                     href={settings.social_linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-blue-600 dark:hover:text-blue-400"
+                    className="text-[#4a5162] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:text-blue-400"
                   >
                     <Linkedin className="h-4 w-4" />
                   </a>
@@ -72,7 +72,7 @@ export default function AboutPage() {
                     href={settings.social_twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-sky-500"
+                    className="text-[#4a5162] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:text-sky-500"
                   >
                     <Twitter className="h-4 w-4" />
                   </a>
@@ -81,7 +81,9 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="prose prose-neutral prose-lg dark:prose-invert max-w-none leading-relaxed text-neutral-700 dark:text-neutral-300">
+          <div className="h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
+
+          <div className="prose prose-slate prose-lg dark:prose-invert max-w-none leading-relaxed text-[#2c313c] dark:text-neutral-300">
             <p>{authorBio}</p>
             <p>
               Welcome to my personal tech blog. Here, I document real challenges, architectural solutions, and coding techniques that come up while designing, building, and maintaining production applications.
@@ -93,41 +95,47 @@ export default function AboutPage() {
         </div>
 
         {/* Core Pillars */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 border-t border-neutral-200 dark:border-neutral-800">
-          <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <Code className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-            <h3 className="text-base font-bold text-neutral-900 dark:text-white">Clean Engineering</h3>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 border-t border-[#e2e5ec] dark:border-neutral-800">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
+            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
+              <Code className="h-6 w-6" />
+            </div>
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">Clean Engineering</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
               Pragmatic TypeScript, modular React patterns, and clean separation of concerns.
             </p>
           </div>
-          <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <Server className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            <h3 className="text-base font-bold text-neutral-900 dark:text-white">Backend &amp; DBs</h3>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
+            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
+              <Server className="h-6 w-6" />
+            </div>
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">Backend &amp; DBs</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
               PostgreSQL relational modeling, Row Level Security, Edge Workers, and APIs.
             </p>
           </div>
-          <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <Cpu className="h-6 w-6 text-amber-600 dark:text-amber-400" />
-            <h3 className="text-base font-bold text-neutral-900 dark:text-white">Performance</h3>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
+            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
+              <Cpu className="h-6 w-6" />
+            </div>
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">Performance</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
               Real-world latency optimizations, bundle profiling, and edge CDN delivery.
             </p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="rounded-2xl bg-neutral-900 p-8 text-white dark:bg-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-8 text-[#111318] dark:border-neutral-700 dark:bg-neutral-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-lg font-bold">Have a technical question or idea?</h3>
-            <p className="text-xs text-neutral-400">
+            <h3 className="text-lg font-bold text-[#111318] dark:text-white">Have a technical question or idea?</h3>
+            <p className="text-xs font-medium text-[#4a5162] dark:text-neutral-400">
               I am always happy to discuss interesting engineering problems.
             </p>
           </div>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-bold text-neutral-900 transition hover:bg-neutral-100"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:brightness-110"
           >
             Get In Touch <ArrowRight className="h-3.5 w-3.5" />
           </Link>

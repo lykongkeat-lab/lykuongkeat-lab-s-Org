@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -16,9 +16,7 @@ import {
   Menu, 
   X, 
   Sun, 
-  Moon, 
-  Terminal,
-  ShieldCheck
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -65,17 +63,17 @@ export default function AdminLayout({ children, title, subtitle }) {
   ];
 
   return (
-    <div className="flex min-h-screen bg-neutral-100 text-neutral-900 transition-colors dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="flex min-h-screen bg-[#f2f3f5] text-[#111318] transition-colors dark:bg-neutral-950 dark:text-neutral-100">
       
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 flex-col border-r border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 shrink-0">
-        <div className="flex h-16 items-center justify-between border-b border-neutral-200 px-6 dark:border-neutral-800">
+      <aside className="hidden lg:flex w-64 flex-col border-r border-[#e2e5ec] bg-white dark:border-neutral-800 dark:bg-neutral-900 shrink-0">
+        <div className="flex h-16 items-center justify-between bg-gradient-to-r from-[#182238] via-[#151c2e] to-[#192036] px-6">
           <Link to="/admin" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 font-mono text-sm font-bold text-white dark:bg-white dark:text-neutral-900">
-              <Terminal className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-sm font-black text-[#111827]">
+              &gt;_
             </div>
             <div>
-              <span className="text-sm font-bold tracking-tight text-neutral-900 dark:text-white">
+              <span className="text-sm font-bold tracking-tight text-white">
                 Admin Console
               </span>
             </div>
@@ -94,10 +92,10 @@ export default function AdminLayout({ children, title, subtitle }) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-colors ${
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-colors ${
                   isActive
-                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-xs'
-                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'
+                    ? 'bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] text-white shadow-sm'
+                    : 'text-[#3f4654] hover:bg-[#f2f3f5] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'
                 }`}
               >
                 <item.icon className="h-4 w-4 shrink-0" />
@@ -108,29 +106,29 @@ export default function AdminLayout({ children, title, subtitle }) {
         </nav>
 
         {/* Bottom Profile and Links */}
-        <div className="border-t border-neutral-200 p-4 dark:border-neutral-800 space-y-3">
+        <div className="border-t border-[#e2e5ec] p-4 dark:border-neutral-800 space-y-3">
           <Link
             to="/"
             target="_blank"
-            className="flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="flex items-center justify-between rounded-xl border border-[#e2e5ec] bg-[#f8f9fa] px-3 py-2 text-xs font-bold text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
             <span className="flex items-center gap-2">
-              <Globe className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <Globe className="h-3.5 w-3.5" />
               View Live Website
             </span>
-            <span className="text-[10px] text-neutral-400">↗</span>
+            <span className="text-[10px]">↗</span>
           </Link>
 
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] text-xs font-bold text-[#111827]">
                 {user?.email?.charAt(0).toUpperCase() || 'A'}
               </div>
               <div className="truncate text-left">
-                <p className="truncate text-xs font-bold text-neutral-900 dark:text-white">
+                <p className="truncate text-xs font-bold text-[#111318] dark:text-white">
                   {profile?.full_name || 'Admin'}
                 </p>
-                <p className="truncate text-[10px] text-neutral-500 dark:text-neutral-400">
+                <p className="truncate text-[10px] font-medium text-[#5a6275] dark:text-neutral-400">
                   {user?.email}
                 </p>
               </div>
@@ -139,7 +137,7 @@ export default function AdminLayout({ children, title, subtitle }) {
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="rounded-lg p-2 text-neutral-500 hover:bg-rose-50 hover:text-rose-600 dark:text-neutral-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 transition"
+              className="rounded-lg p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600 dark:text-neutral-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 transition"
             >
               <LogOut className="h-4 w-4" />
             </button>
@@ -151,21 +149,21 @@ export default function AdminLayout({ children, title, subtitle }) {
       <div className="flex flex-1 flex-col min-w-0">
         
         {/* Top Navbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-neutral-200 bg-white/80 px-4 sm:px-6 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/80">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e2e5ec] bg-white/95 px-4 sm:px-6 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/80">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              className="lg:hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800"
             >
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
 
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white">
+              <h1 className="text-base sm:text-lg font-bold text-[#111318] dark:text-white">
                 {title || 'Dashboard'}
               </h1>
               {subtitle && (
-                <p className="hidden sm:block text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="hidden sm:block text-xs font-medium text-[#5a6275] dark:text-neutral-400">
                   {subtitle}
                 </p>
               )}
@@ -175,15 +173,15 @@ export default function AdminLayout({ children, title, subtitle }) {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              className="rounded-lg bg-[#2a2723] p-2 text-[#f6c453] shadow-[0_0_12px_rgba(245,158,11,0.25)] transition hover:brightness-110"
               title="Toggle Dark / Light Theme"
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
 
             <Link
               to="/admin/posts/new"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-neutral-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition hover:brightness-110"
             >
               <PlusCircle className="h-3.5 w-3.5" />
               New Article
@@ -193,23 +191,23 @@ export default function AdminLayout({ children, title, subtitle }) {
 
         {/* Mobile Navigation Drawer */}
         {mobileOpen && (
-          <div className="lg:hidden border-b border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 space-y-1">
+          <div className="lg:hidden border-b border-[#e2e5ec] bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-[#111318] hover:bg-[#f2f3f5] hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800"
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-4 w-4 text-[#0d47e1]" />
                 {item.label}
               </Link>
             ))}
-            <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+            <div className="pt-3 border-t border-[#e2e5ec] dark:border-neutral-800 flex items-center justify-between">
               <Link
                 to="/"
                 target="_blank"
-                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+                className="text-xs font-bold text-[#0d47e1] dark:text-[#05dcef]"
               >
                 Live Website ↗
               </Link>

@@ -2,3 +2,22 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+@theme {
+  --color-brand: #0d47e1;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-text: #111318;
+  --color-brand-light: #efe4c8;
+
+  /* Map emerald utility classes to royal blue / teal palette */
+  --color-emerald-50: #eff6ff;
+  --color-emerald-100: #dbeafe;
+  --color-emerald-200: #bfdbfe;
+  --color-emerald-300: #93c5fd;
+  --color-emerald-400: #2bb8d6;
+  --color-emerald-500: #1d63ed;
+  --color-emerald-600: #0d47e1;
+  --color-emerald-700: #1e40af;
+  --color-emerald-800: #1e3a8a;
+  --color-emerald-900: #172554;
+  --color-emerald-950: #0f172a;
+}

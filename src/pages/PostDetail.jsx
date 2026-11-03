@@ -10,9 +10,7 @@ import {
   MessageSquare, 
   Send, 
   CheckCircle2, 
-  AlertCircle, 
-  Share2,
-  Bookmark
+  AlertCircle
 } from 'lucide-react';
 import Layout from '../components/Layout';
 import AdSlot from '../components/AdSlot';
@@ -116,13 +114,13 @@ export default function PostDetail() {
     return (
       <Layout>
         <div className="space-y-6 animate-pulse">
-          <div className="h-8 w-1/3 bg-neutral-200 dark:bg-neutral-800 rounded" />
-          <div className="h-12 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded" />
-          <div className="h-64 w-full bg-neutral-200 dark:bg-neutral-800 rounded-2xl" />
+          <div className="h-8 w-1/3 bg-[#e2e5ec] dark:bg-neutral-800 rounded" />
+          <div className="h-12 w-3/4 bg-[#e2e5ec] dark:bg-neutral-800 rounded" />
+          <div className="h-64 w-full bg-[#e2e5ec] dark:bg-neutral-800 rounded-2xl" />
           <div className="space-y-3">
-            <div className="h-4 w-full bg-neutral-200 dark:bg-neutral-800 rounded" />
-            <div className="h-4 w-5/6 bg-neutral-200 dark:bg-neutral-800 rounded" />
-            <div className="h-4 w-4/6 bg-neutral-200 dark:bg-neutral-800 rounded" />
+            <div className="h-4 w-full bg-[#e2e5ec] dark:bg-neutral-800 rounded" />
+            <div className="h-4 w-5/6 bg-[#e2e5ec] dark:bg-neutral-800 rounded" />
+            <div className="h-4 w-4/6 bg-[#e2e5ec] dark:bg-neutral-800 rounded" />
           </div>
         </div>
       </Layout>
@@ -132,15 +130,15 @@ export default function PostDetail() {
   if (!post) {
     return (
       <Layout>
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-12 text-center dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Article Not Found</h2>
-          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-12 text-center dark:border-neutral-800 dark:bg-neutral-900">
+          <h2 className="text-2xl font-bold text-[#111318] dark:text-white">Article Not Found</h2>
+          <p className="mt-2 text-sm text-[#4a5162] dark:text-neutral-400">
             The article you are looking for does not exist or may have been unposted.
           </p>
           <div className="mt-6">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-neutral-900"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-sm font-bold text-white shadow-sm hover:brightness-110"
             >
               <ArrowLeft className="h-4 w-4" /> Return to Articles
             </Link>
@@ -157,7 +155,7 @@ export default function PostDetail() {
         <div>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d47e1] hover:underline dark:text-neutral-400 dark:hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
           </Link>
@@ -169,14 +167,14 @@ export default function PostDetail() {
             {post.categories?.name && (
               <Link
                 to={`/category/${post.categories.slug}`}
-                className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300"
+                className="rounded-md bg-[#efe4c8] px-2.5 py-1 text-xs font-bold text-[#6b4c1b] hover:brightness-95 dark:bg-[#05dcef]/20 dark:text-[#05dcef]"
               >
                 {post.categories.name}
               </Link>
             )}
-            <span className="text-xs text-neutral-400">•</span>
-            <span className="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
-              <Calendar className="h-3.5 w-3.5" />
+            <span className="text-xs text-slate-300">•</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
+              <Calendar className="h-3.5 w-3.5 text-[#0d47e1] dark:text-neutral-400" />
               {post.published_at
                 ? new Date(post.published_at).toLocaleDateString('en-US', {
                     month: 'long',
@@ -185,31 +183,34 @@ export default function PostDetail() {
                   })
                 : 'Draft'}
             </span>
-            <span className="text-xs text-neutral-400">•</span>
-            <span className="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
-              <Clock className="h-3.5 w-3.5" />
+            <span className="text-xs text-slate-300">•</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
+              <Clock className="h-3.5 w-3.5 text-[#0d47e1]" />
               {post.reading_time || 3} min read
             </span>
-            <span className="text-xs text-neutral-400">•</span>
-            <span className="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
-              <Eye className="h-3.5 w-3.5" />
+            <span className="text-xs text-slate-300">•</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-[#5a6275] dark:text-neutral-400">
+              <Eye className="h-3.5 w-3.5 text-[#0d47e1]" />
               {post.views || 0} views
             </span>
           </div>
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl lg:text-5xl dark:text-white">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#111318] sm:text-4xl lg:text-5xl dark:text-white">
             {post.title}
           </h1>
 
           {post.excerpt && (
-            <p className="text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
+            <p className="text-lg leading-relaxed text-[#2c313c] dark:text-neutral-300">
               {post.excerpt}
             </p>
           )}
 
+          {/* Multi-color divider bar matching screenshot */}
+          <div className="h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
+
           {/* Author Details */}
-          <div className="flex items-center gap-3 border-y border-neutral-200 py-4 dark:border-neutral-800">
-            <div className="h-10 w-10 overflow-hidden rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700">
+          <div className="flex items-center gap-3 border-b border-[#e2e5ec] py-4 dark:border-neutral-800">
+            <div className="h-10 w-10 overflow-hidden rounded-full ring-2 ring-[#2bb8d6] dark:ring-neutral-700">
               <img
                 src={
                   post.profiles?.avatar_url ||
@@ -220,10 +221,10 @@ export default function PostDetail() {
               />
             </div>
             <div>
-              <p className="text-sm font-semibold text-neutral-900 dark:text-white">
+              <p className="text-sm font-bold text-[#111318] dark:text-white">
                 {post.profiles?.full_name || 'Ly Kuongkeat'}
               </p>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="text-xs font-medium text-[#0d47e1] dark:text-neutral-400">
                 Author &amp; Software Engineer
               </p>
             </div>
@@ -232,7 +233,7 @@ export default function PostDetail() {
 
         {/* Cover Image */}
         {post.cover_url && (
-          <div className="overflow-hidden rounded-2xl bg-neutral-100 dark:bg-neutral-800">
+          <div className="overflow-hidden rounded-2xl border border-[#e2e5ec] bg-slate-100 dark:border-neutral-800 dark:bg-neutral-800">
             <img
               src={post.cover_url}
               alt={post.title}
@@ -246,11 +247,11 @@ export default function PostDetail() {
 
         {/* Main Article Body (DOMPurify Sanitized) */}
         <div
-          className="prose prose-neutral prose-lg dark:prose-invert max-w-none leading-relaxed
-            prose-headings:font-bold prose-headings:tracking-tight 
-            prose-a:text-emerald-600 hover:prose-a:text-emerald-500 dark:prose-a:text-emerald-400
-            prose-code:text-emerald-600 dark:prose-code:text-emerald-400 prose-code:before:content-none prose-code:after:content-none
-            prose-pre:bg-neutral-900 prose-pre:border prose-pre:border-neutral-800 dark:prose-pre:bg-neutral-900"
+          className="prose prose-slate prose-lg dark:prose-invert max-w-none leading-relaxed
+            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-[#111318] dark:prose-headings:text-white
+            prose-a:text-[#0d47e1] hover:prose-a:text-[#1d63ed] dark:prose-a:text-[#05dcef]
+            prose-code:text-[#0d47e1] dark:prose-code:text-[#05dcef] prose-code:before:content-none prose-code:after:content-none
+            prose-pre:bg-[#182238] prose-pre:border prose-pre:border-[#2a3652] dark:prose-pre:bg-neutral-900"
           dangerouslySetInnerHTML={{ __html: renderContent() }}
         />
 
@@ -259,16 +260,16 @@ export default function PostDetail() {
 
         {/* Post Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="border-t border-neutral-200 pt-6 dark:border-neutral-800">
+          <div className="border-t border-[#e2e5ec] pt-6 dark:border-neutral-800">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+              <span className="text-xs font-bold text-[#111318] dark:text-neutral-400">
                 Tags:
               </span>
               {post.tags.map((t) => (
                 <Link
                   key={t.id}
                   to={`/tag/${t.slug}`}
-                  className="rounded-md border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  className="rounded-md border border-[#e2e5ec] bg-white px-2.5 py-1 text-xs font-semibold text-[#3f4654] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 >
                   #{t.name}
                 </Link>
@@ -278,10 +279,10 @@ export default function PostDetail() {
         )}
 
         {/* Comments Section */}
-        <section className="border-t border-neutral-200 pt-10 space-y-8 dark:border-neutral-800">
+        <section className="border-t border-[#e2e5ec] pt-10 space-y-8 dark:border-neutral-800">
           <div className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-            <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+            <MessageSquare className="h-5 w-5 text-[#0d47e1] dark:text-[#05dcef]" />
+            <h3 className="text-xl font-bold text-[#111318] dark:text-white">
               Comments ({comments.length})
             </h3>
           </div>
@@ -289,20 +290,20 @@ export default function PostDetail() {
           {/* Existing Approved Comments */}
           <div className="space-y-4">
             {comments.length === 0 ? (
-              <p className="text-sm italic text-neutral-500 dark:text-neutral-400">
+              <p className="text-sm italic text-[#5a6275] dark:text-neutral-400">
                 No comments yet. Be the first to share your thoughts!
               </p>
             ) : (
               comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-4 space-y-2 dark:border-neutral-800 dark:bg-neutral-900/40"
+                  className="rounded-xl border border-[#e2e5ec] bg-[#f8f9fa] p-4 space-y-2 dark:border-neutral-800 dark:bg-neutral-900/40"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-neutral-900 dark:text-white">
+                    <span className="text-sm font-bold text-[#111318] dark:text-white">
                       {comment.author_name}
                     </span>
-                    <span className="text-xs text-neutral-400">
+                    <span className="text-xs text-[#5a6275]">
                       {new Date(comment.created_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -310,7 +311,7 @@ export default function PostDetail() {
                       })}
                     </span>
                   </div>
-                  <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sm text-[#2c313c] dark:text-neutral-300 leading-relaxed whitespace-pre-wrap">
                     {comment.content}
                   </p>
                 </div>
@@ -319,18 +320,18 @@ export default function PostDetail() {
           </div>
 
           {/* Add Comment Form */}
-          <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
-            <h4 className="text-base font-bold text-neutral-900 dark:text-white mb-1">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+            <h4 className="text-base font-bold text-[#111318] dark:text-white mb-1">
               Leave a Comment
             </h4>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-4">
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400 mb-4">
               Your email will remain private. Comments are reviewed by the author before appearing publicly.
             </p>
 
             <form onSubmit={handleCommentSubmit} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+                  <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
                     Your Name *
                   </label>
                   <input
@@ -339,12 +340,12 @@ export default function PostDetail() {
                     value={commentForm.name}
                     onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
                     placeholder="e.g. Sokha"
-                    className="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-sm text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white"
+                    className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+                  <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
                     Your Email *
                   </label>
                   <input
@@ -353,13 +354,13 @@ export default function PostDetail() {
                     value={commentForm.email}
                     onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
                     placeholder="sokha@domain.com"
-                    className="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-sm text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white"
+                    className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
+                <label className="block text-xs font-bold text-[#2c313c] dark:text-neutral-300 mb-1">
                   Comment *
                 </label>
                 <textarea
@@ -368,7 +369,7 @@ export default function PostDetail() {
                   value={commentForm.content}
                   onChange={(e) => setCommentForm({ ...commentForm, content: e.target.value })}
                   placeholder="Share your thoughts, suggestions, or questions..."
-                  className="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-sm text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white"
+                  className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                 />
               </div>
 
@@ -376,7 +377,7 @@ export default function PostDetail() {
                 <button
                   type="submit"
                   disabled={commentStatus.state === 'submitting'}
-                  className="inline-flex items-center gap-2 rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:brightness-110 disabled:opacity-60"
                 >
                   <Send className="h-4 w-4" />
                   {commentStatus.state === 'submitting' ? 'Submitting...' : 'Post Comment'}
@@ -384,7 +385,7 @@ export default function PostDetail() {
               </div>
 
               {commentStatus.state === 'success' && (
-                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                <div className="flex items-center gap-2 rounded-lg bg-[#efe4c8] p-3 text-xs font-bold text-[#6b4c1b] dark:bg-emerald-950/60 dark:text-[#05dcef]">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>{commentStatus.message}</span>
                 </div>

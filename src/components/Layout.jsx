@@ -6,7 +6,7 @@ import AdSlot from './AdSlot';
 
 export default function Layout({ children, showSidebar = true, className = '' }) {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-neutral-900 selection:bg-neutral-900 selection:text-white transition-colors duration-200 dark:bg-neutral-950 dark:text-neutral-100 dark:selection:bg-white dark:selection:text-neutral-900">
+    <div className="flex min-h-screen flex-col bg-[#f2f3f5] text-[#111318] selection:bg-[#5fd3bc] selection:text-[#111318] transition-colors duration-200 dark:bg-neutral-950 dark:text-neutral-100 dark:selection:bg-[#2bb8d6] dark:selection:text-neutral-950">
       {/* 1. Top Global Navigation */}
       <Header />
 
