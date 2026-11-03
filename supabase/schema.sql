@@ -577,7 +577,7 @@ VALUES
     "author_avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
     "cv_pdf_url": "",
     "social_github": "https://github.com",
-    "social_linkedin": "https://linkedin.com",
-    "social_twitter": "https://twitter.com"
+    "social_telegram": "https://t.me",
+    "social_facebook": "https://facebook.com"
   }'::jsonb)
 ON CONFLICT (key) DO NOTHING;

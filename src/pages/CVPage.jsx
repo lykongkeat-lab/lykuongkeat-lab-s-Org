@@ -73,7 +73,7 @@ export default function CVPage() {
     <Layout showSidebar={false} className="max-w-4xl mx-auto">
       <div className="space-y-12">
         {/* CV Hero Header */}
-        <div className="rounded-3xl border border-[#e2e5ec] bg-[#f8f9fa] p-8 sm:p-10 shadow-xs dark:border-neutral-800 dark:bg-neutral-900/40">
+        <div className="rounded-3xl border border-[#e2e5ec] bg-[#ffffff] p-8 sm:p-10 shadow-xs dark:border-neutral-800 dark:bg-neutral-900/40">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
@@ -113,12 +113,12 @@ export default function CVPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-40 animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] dark:border-neutral-800 dark:bg-neutral-900"
+                className="h-40 animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#ffffff] dark:border-neutral-800 dark:bg-neutral-900"
               />
             ))}
           </div>
         ) : sections.length === 0 ? (
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <FileText className="mx-auto h-8 w-8 text-[#0d47e1] mb-2" />
             <h3 className="text-base font-bold text-[#111318] dark:text-white">
               CV Content Being Updated
@@ -144,7 +144,7 @@ export default function CVPage() {
                   {(section.items || []).map((item) => (
                     <div
                       key={item.id}
-                      className="group rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-5 transition hover:border-[#1d63ed]/50 hover:bg-white hover:shadow-xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
+                      className="group rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 transition hover:border-[#1d63ed]/50 hover:shadow-xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                         <div className="space-y-1">

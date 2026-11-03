@@ -63,13 +63,13 @@ export default function AdminLayout({ children, title, subtitle }) {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#f2f3f5] text-[#111318] transition-colors dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="flex min-h-screen bg-[#ffffff] text-[#111318] transition-colors dark:bg-neutral-950 dark:text-neutral-100">
       
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 flex-col border-r border-[#e2e5ec] bg-white dark:border-neutral-800 dark:bg-neutral-900 shrink-0">
-        <div className="flex h-16 items-center justify-between bg-gradient-to-r from-[#182238] via-[#151c2e] to-[#192036] px-6">
+      <aside className="hidden lg:flex w-64 flex-col border-r border-[#e2e5ec] bg-[#ffffff] dark:border-neutral-800 dark:bg-neutral-900 shrink-0">
+        <div className="flex h-16 items-center justify-between bg-[#061946] px-6">
           <Link to="/admin" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-sm font-black text-[#111827]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-sm font-black text-[#061946]">
               &gt;_
             </div>
             <div>
@@ -95,7 +95,7 @@ export default function AdminLayout({ children, title, subtitle }) {
                 className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-colors ${
                   isActive
                     ? 'bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] text-white shadow-sm'
-                    : 'text-[#3f4654] hover:bg-[#f2f3f5] hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'
+                    : 'text-[#3f4654] hover:bg-slate-50 hover:text-[#0d47e1] dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white'
                 }`}
               >
                 <item.icon className="h-4 w-4 shrink-0" />
@@ -110,7 +110,7 @@ export default function AdminLayout({ children, title, subtitle }) {
           <Link
             to="/"
             target="_blank"
-            className="flex items-center justify-between rounded-xl border border-[#e2e5ec] bg-[#f8f9fa] px-3 py-2 text-xs font-bold text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="flex items-center justify-between rounded-xl border border-[#e2e5ec] bg-[#ffffff] px-3 py-2 text-xs font-bold text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
             <span className="flex items-center gap-2">
               <Globe className="h-3.5 w-3.5" />
@@ -121,7 +121,7 @@ export default function AdminLayout({ children, title, subtitle }) {
 
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] text-xs font-bold text-[#111827]">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] text-xs font-bold text-[#061946]">
                 {user?.email?.charAt(0).toUpperCase() || 'A'}
               </div>
               <div className="truncate text-left">
@@ -149,7 +149,7 @@ export default function AdminLayout({ children, title, subtitle }) {
       <div className="flex flex-1 flex-col min-w-0">
         
         {/* Top Navbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e2e5ec] bg-white/95 px-4 sm:px-6 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/80">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e2e5ec] bg-[#ffffff]/95 px-4 sm:px-6 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/80">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -191,13 +191,13 @@ export default function AdminLayout({ children, title, subtitle }) {
 
         {/* Mobile Navigation Drawer */}
         {mobileOpen && (
-          <div className="lg:hidden border-b border-[#e2e5ec] bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 space-y-1">
+          <div className="lg:hidden border-b border-[#e2e5ec] bg-[#ffffff] p-4 dark:border-neutral-800 dark:bg-neutral-900 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-[#111318] hover:bg-[#f2f3f5] hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-[#111318] hover:bg-slate-50 hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800"
               >
                 <item.icon className="h-4 w-4 text-[#0d47e1]" />
                 {item.label}

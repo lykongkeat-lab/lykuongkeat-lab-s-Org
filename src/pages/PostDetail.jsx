@@ -130,7 +130,7 @@ export default function PostDetail() {
   if (!post) {
     return (
       <Layout>
-        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-12 text-center dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-800 dark:bg-neutral-900">
           <h2 className="text-2xl font-bold text-[#111318] dark:text-white">Article Not Found</h2>
           <p className="mt-2 text-sm text-[#4a5162] dark:text-neutral-400">
             The article you are looking for does not exist or may have been unposted.
@@ -205,7 +205,7 @@ export default function PostDetail() {
             </p>
           )}
 
-          {/* Multi-color divider bar matching screenshot */}
+          {/* Multi-color divider bar */}
           <div className="h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
 
           {/* Author Details */}
@@ -251,7 +251,7 @@ export default function PostDetail() {
             prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-[#111318] dark:prose-headings:text-white
             prose-a:text-[#0d47e1] hover:prose-a:text-[#1d63ed] dark:prose-a:text-[#05dcef]
             prose-code:text-[#0d47e1] dark:prose-code:text-[#05dcef] prose-code:before:content-none prose-code:after:content-none
-            prose-pre:bg-[#182238] prose-pre:border prose-pre:border-[#2a3652] dark:prose-pre:bg-neutral-900"
+            prose-pre:bg-[#061946] prose-pre:border prose-pre:border-[#1a3880] dark:prose-pre:bg-neutral-900"
           dangerouslySetInnerHTML={{ __html: renderContent() }}
         />
 
@@ -269,7 +269,7 @@ export default function PostDetail() {
                 <Link
                   key={t.id}
                   to={`/tag/${t.slug}`}
-                  className="rounded-md border border-[#e2e5ec] bg-white px-2.5 py-1 text-xs font-semibold text-[#3f4654] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  className="rounded-md border border-[#e2e5ec] bg-[#ffffff] px-2.5 py-1 text-xs font-semibold text-[#3f4654] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 >
                   #{t.name}
                 </Link>
@@ -297,7 +297,7 @@ export default function PostDetail() {
               comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="rounded-xl border border-[#e2e5ec] bg-[#f8f9fa] p-4 space-y-2 dark:border-neutral-800 dark:bg-neutral-900/40"
+                  className="rounded-xl border border-[#e2e5ec] bg-[#ffffff] p-4 space-y-2 dark:border-neutral-800 dark:bg-neutral-900/40"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-[#111318] dark:text-white">
@@ -320,7 +320,7 @@ export default function PostDetail() {
           </div>
 
           {/* Add Comment Form */}
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
             <h4 className="text-base font-bold text-[#111318] dark:text-white mb-1">
               Leave a Comment
             </h4>
@@ -340,7 +340,7 @@ export default function PostDetail() {
                     value={commentForm.name}
                     onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
                     placeholder="e.g. Sokha"
-                    className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                    className="w-full rounded-lg border border-[#d5dae2] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                   />
                 </div>
 
@@ -354,7 +354,7 @@ export default function PostDetail() {
                     value={commentForm.email}
                     onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
                     placeholder="sokha@domain.com"
-                    className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                    className="w-full rounded-lg border border-[#d5dae2] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                   />
                 </div>
               </div>
@@ -369,7 +369,7 @@ export default function PostDetail() {
                   value={commentForm.content}
                   onChange={(e) => setCommentForm({ ...commentForm, content: e.target.value })}
                   placeholder="Share your thoughts, suggestions, or questions..."
-                  className="w-full rounded-lg border border-[#d5dae2] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                  className="w-full rounded-lg border border-[#d5dae2] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                 />
               </div>
 

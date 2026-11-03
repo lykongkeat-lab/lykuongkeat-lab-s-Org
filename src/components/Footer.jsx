@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Github, Linkedin, Twitter, Mail, Shield } from 'lucide-react';
+import { Terminal, Github, Send, Facebook, Mail, Shield } from 'lucide-react';
 import AdSlot from './AdSlot';
 import { getSiteSettings, getCategories } from '../lib/api';
 
@@ -28,8 +28,11 @@ export default function Footer() {
     siteSettings?.tagline ||
     'Software Engineer & Web Developer — writing about real-world code and engineering.';
 
+  const telegramUrl = siteSettings?.social_telegram || siteSettings?.social_linkedin;
+  const facebookUrl = siteSettings?.social_facebook || siteSettings?.social_twitter;
+
   return (
-    <footer className="mt-20 border-t border-[#252d44] bg-[#151c2e] text-slate-300 transition-colors dark:border-neutral-800 dark:bg-neutral-950">
+    <footer className="mt-20 border-t border-[#16306b] bg-[#041236] text-slate-300 transition-colors dark:border-neutral-800 dark:bg-neutral-950">
       {/* Footer Advertisement Slot */}
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <AdSlot slot="footer" />
@@ -41,14 +44,14 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-xs font-bold text-[#0f172a]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-xs font-bold text-[#061946]">
                 <Terminal className="h-4 w-4 stroke-[2.5]" />
               </div>
               <span className="text-lg font-extrabold tracking-tight text-white">
                 {siteTitle}
               </span>
             </Link>
-            <p className="max-w-md text-sm leading-relaxed text-slate-400">
+            <p className="max-w-md text-sm leading-relaxed text-slate-300">
               {tagline}
             </p>
             <div className="flex items-center gap-3 pt-2">
@@ -57,38 +60,42 @@ export default function Footer() {
                   href={siteSettings.social_github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-400 transition hover:text-[#3cd0a8]"
+                  className="text-slate-300 transition hover:text-[#3cd0a8]"
                   aria-label="GitHub"
+                  title="GitHub"
                 >
                   <Github className="h-5 w-5" />
                 </a>
               )}
-              {siteSettings?.social_linkedin && (
+              {telegramUrl && (
                 <a
-                  href={siteSettings.social_linkedin}
+                  href={telegramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-400 transition hover:text-[#3cd0a8]"
-                  aria-label="LinkedIn"
+                  className="text-slate-300 transition hover:text-[#3cd0a8]"
+                  aria-label="Telegram"
+                  title="Telegram"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <Send className="h-5 w-5" />
                 </a>
               )}
-              {siteSettings?.social_twitter && (
+              {facebookUrl && (
                 <a
-                  href={siteSettings.social_twitter}
+                  href={facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-400 transition hover:text-[#3cd0a8]"
-                  aria-label="Twitter"
+                  className="text-slate-300 transition hover:text-[#3cd0a8]"
+                  aria-label="Facebook"
+                  title="Facebook"
                 >
-                  <Twitter className="h-5 w-5" />
+                  <Facebook className="h-5 w-5" />
                 </a>
               )}
               <Link
                 to="/contact"
-                className="text-slate-400 transition hover:text-[#3cd0a8]"
+                className="text-slate-300 transition hover:text-[#3cd0a8]"
                 aria-label="Contact"
+                title="Contact"
               >
                 <Mail className="h-5 w-5" />
               </Link>
@@ -100,7 +107,7 @@ export default function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
               Navigation
             </h4>
-            <ul className="space-y-2 text-sm text-slate-400">
+            <ul className="space-y-2 text-sm text-slate-300">
               <li>
                 <Link to="/" className="transition hover:text-[#3cd0a8]">
                   Articles
@@ -129,7 +136,7 @@ export default function Footer() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
               Categories
             </h4>
-            <ul className="space-y-2 text-sm text-slate-400">
+            <ul className="space-y-2 text-sm text-slate-300">
               {categories.map((cat) => (
                 <li key={cat.id}>
                   <Link
@@ -141,14 +148,14 @@ export default function Footer() {
                 </li>
               ))}
               {categories.length === 0 && (
-                <li className="text-xs text-slate-500">No categories yet</li>
+                <li className="text-xs text-slate-400">No categories yet</li>
               )}
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-slate-400 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-slate-300 sm:flex-row">
           <p>© {new Date().getFullYear()} <span className="font-semibold text-white">{siteTitle}</span>. All rights reserved.</p>
 
           <div className="flex items-center gap-4">

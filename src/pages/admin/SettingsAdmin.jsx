@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, Check, AlertCircle, Users, Trash2, Mail } from 'lucide-react';
+import { Save, Check, AlertCircle, Users, Trash2 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { 
   getSiteSettings, 
@@ -18,8 +18,8 @@ export default function SettingsAdmin() {
     author_avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     cv_pdf_url: '',
     social_github: 'https://github.com',
-    social_linkedin: 'https://linkedin.com',
-    social_twitter: 'https://twitter.com',
+    social_telegram: 'https://t.me',
+    social_facebook: 'https://facebook.com',
   });
 
   const [subscribers, setSubscribers] = useState([]);
@@ -37,7 +37,23 @@ export default function SettingsAdmin() {
         ]);
 
         if (mounted) {
-          if (settingsData) setSettings(settingsData);
+          if (settingsData) {
+            setSettings({
+              ...settingsData,
+              social_telegram:
+                settingsData.social_telegram !== undefined
+                  ? settingsData.social_telegram
+                  : settingsData.social_linkedin === 'https://linkedin.com'
+                  ? 'https://t.me'
+                  : settingsData.social_linkedin || 'https://t.me',
+              social_facebook:
+                settingsData.social_facebook !== undefined
+                  ? settingsData.social_facebook
+                  : settingsData.social_twitter === 'https://twitter.com'
+                  ? 'https://facebook.com'
+                  : settingsData.social_twitter || 'https://facebook.com',
+            });
+          }
           setSubscribers(subsData || []);
         }
       } catch (err) {
@@ -213,6 +229,7 @@ export default function SettingsAdmin() {
                 <input
                   type="url"
                   value={settings.social_github || ''}
+                  placeholder="https://github.com/username"
                   onChange={(e) => setSettings({ ...settings, social_github: e.target.value })}
                   className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 />
@@ -220,24 +237,26 @@ export default function SettingsAdmin() {
 
               <div>
                 <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                  LinkedIn Profile URL
+                  Telegram Profile URL
                 </label>
                 <input
                   type="url"
-                  value={settings.social_linkedin || ''}
-                  onChange={(e) => setSettings({ ...settings, social_linkedin: e.target.value })}
+                  value={settings.social_telegram || ''}
+                  placeholder="https://t.me/username"
+                  onChange={(e) => setSettings({ ...settings, social_telegram: e.target.value })}
                   className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                  Twitter / X Profile URL
+                  Facebook Profile URL
                 </label>
                 <input
                   type="url"
-                  value={settings.social_twitter || ''}
-                  onChange={(e) => setSettings({ ...settings, social_twitter: e.target.value })}
+                  value={settings.social_facebook || ''}
+                  placeholder="https://facebook.com/username"
+                  onChange={(e) => setSettings({ ...settings, social_facebook: e.target.value })}
                   className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 />
               </div>

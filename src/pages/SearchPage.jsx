@@ -99,7 +99,7 @@ export default function SearchPage() {
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
                 placeholder="Search by article title or keywords..."
-                className="w-full rounded-xl border border-[#d5dae2] bg-white py-3 pl-11 pr-4 text-base text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] py-3 pl-11 pr-4 text-base text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
               />
             </div>
             <button
@@ -123,19 +123,19 @@ export default function SearchPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-32 animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] dark:border-neutral-800 dark:bg-neutral-900"
+                className="h-32 animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#ffffff] dark:border-neutral-800 dark:bg-neutral-900"
               />
             ))}
           </div>
         ) : !initialQuery ? (
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <Search className="mx-auto h-8 w-8 text-[#0d47e1] mb-2" />
             <p className="text-[#2c313c] font-medium dark:text-neutral-400 text-sm">
               Type keywords above to search for articles.
             </p>
           </div>
         ) : posts.length === 0 ? (
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center dark:border-neutral-700 dark:bg-neutral-900">
             <h3 className="text-base font-bold text-[#111318] dark:text-white">
               No matching articles found
             </h3>
@@ -148,11 +148,11 @@ export default function SearchPage() {
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="group rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 transition hover:border-[#1d63ed]/50 hover:bg-white hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
+                className="group rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 transition hover:border-[#1d63ed]/50 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   {post.cover_url && (
-                    <div className="h-32 w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-slate-200 dark:bg-neutral-800">
+                    <div className="h-32 w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-slate-100 dark:bg-neutral-800">
                       <img
                         src={post.cover_url}
                         alt={post.title}
@@ -207,7 +207,7 @@ export default function SearchPage() {
             <button
               onClick={() => handlePageChange(pageParam - 1)}
               disabled={pageParam <= 1}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-white px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </button>
@@ -217,7 +217,7 @@ export default function SearchPage() {
             <button
               onClick={() => handlePageChange(pageParam + 1)}
               disabled={pageParam >= totalPages}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-white px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#d5dae2] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:border-[#0d47e1] hover:text-[#0d47e1] disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
               Next <ChevronRight className="h-4 w-4" />
             </button>

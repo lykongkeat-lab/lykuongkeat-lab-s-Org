@@ -61,7 +61,7 @@ export default function ContactPage() {
           <div className="mt-5 h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
         </div>
 
-        <div className="rounded-3xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-3xl border border-[#e2e5ec] bg-[#ffffff] p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
@@ -74,7 +74,7 @@ export default function ContactPage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="e.g. John Doe"
-                  className="w-full rounded-xl border border-[#d5dae2] bg-white px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                  className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                 />
               </div>
 
@@ -88,7 +88,7 @@ export default function ContactPage() {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="john@example.com"
-                  className="w-full rounded-xl border border-[#d5dae2] bg-white px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                  className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
                 placeholder="Question about web development, consulting, etc."
-                className="w-full rounded-xl border border-[#d5dae2] bg-white px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
               />
             </div>
 
@@ -117,7 +117,7 @@ export default function ContactPage() {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="Write your message here..."
-                className="w-full rounded-xl border border-[#d5dae2] bg-white px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
+                className="w-full rounded-xl border border-[#d5dae2] bg-[#ffffff] px-4 py-2.5 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500 dark:focus:border-[#05dcef]"
               />
             </div>
 

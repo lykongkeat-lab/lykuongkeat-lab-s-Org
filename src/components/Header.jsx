@@ -21,7 +21,7 @@ export default function Header() {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme');
       if (stored) return stored;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      return 'light';
     }
     return 'light';
   });
@@ -84,13 +84,13 @@ export default function Header() {
   const siteTitle = siteSettings?.site_title || 'Ly Kuongkeat';
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#252d44] bg-gradient-to-r from-[#182238] via-[#151c2e] to-[#192036] text-white shadow-md transition-colors dark:border-neutral-800 dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950">
+    <header className="sticky top-0 z-40 w-full border-b border-[#16306b] bg-[#061946]/95 text-white shadow-md backdrop-blur-md transition-colors dark:border-neutral-800 dark:bg-neutral-950">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Brand / Logo */}
         <div className="flex items-center gap-3">
           <Link to="/" className="group flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-sm font-bold text-[#0f172a] shadow-sm transition-transform group-hover:scale-105">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#2bb8d6] to-[#3cd0a8] font-mono text-sm font-bold text-[#061946] shadow-sm transition-transform group-hover:scale-105">
               <Terminal className="h-5 w-5 stroke-[2.5]" />
             </div>
             <div className="flex flex-col">
@@ -116,7 +116,7 @@ export default function Header() {
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-semibold rounded-lg transition-all ${
                   isActive
                     ? 'bg-white/15 text-[#3cd0a8] shadow-2xs'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                    : 'text-slate-200 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <item.icon className="h-4 w-4" />
@@ -183,7 +183,7 @@ export default function Header() {
 
       {/* Slide-down Search Bar */}
       {searchOpen && (
-        <div className="border-t border-[#252d44] bg-[#151c2e]/95 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950/95">
+        <div className="border-t border-[#16306b] bg-[#041236] px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950/95">
           <form onSubmit={handleSearchSubmit} className="mx-auto flex max-w-3xl items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#f6c453]" />
@@ -193,7 +193,7 @@ export default function Header() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search articles by title, keywords..."
                 autoFocus
-                className="w-full rounded-xl border border-slate-700 bg-[#1e273d] py-2 pl-10 pr-4 text-sm text-white placeholder-slate-400 focus:border-[#2bb8d6] focus:outline-hidden"
+                className="w-full rounded-xl border border-[#1a3880] bg-[#0b235e] py-2 pl-10 pr-4 text-sm text-white placeholder-slate-400 focus:border-[#2bb8d6] focus:outline-hidden"
               />
             </div>
             <button
@@ -215,7 +215,7 @@ export default function Header() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#252d44] bg-[#151c2e] px-4 pt-3 pb-5 space-y-2 dark:border-neutral-800 dark:bg-neutral-950">
+        <div className="md:hidden border-t border-[#16306b] bg-[#061946] px-4 pt-3 pb-5 space-y-2 dark:border-neutral-800 dark:bg-neutral-950">
           {navLinks.map((item) => {
             const isActive =
               item.path === '/'

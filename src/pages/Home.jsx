@@ -72,7 +72,7 @@ export default function Home() {
     <Layout>
       <div className="space-y-10">
         
-        {/* Welcome Section matching screenshot */}
+        {/* Welcome Section on #ffffff light mode background */}
         <div className="space-y-4">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1.5 text-xs font-semibold text-[#6b4c1b] shadow-2xs dark:bg-amber-950/60 dark:text-amber-300">
             <Sparkles className="h-3.5 w-3.5 text-[#7c581f] dark:text-amber-400" />
@@ -100,7 +100,7 @@ export default function Home() {
 
         {/* Featured Post Card (Page 1) */}
         {pageParam === 1 && featuredPost && !loading && (
-          <div className="relative overflow-hidden rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 sm:p-8 shadow-xs transition-all hover:border-[#cfd5e2] dark:border-neutral-800 dark:bg-neutral-900/60 dark:hover:border-neutral-700">
+          <div className="relative overflow-hidden rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 sm:p-8 shadow-xs transition-all hover:border-[#cfd5e2] dark:border-neutral-800 dark:bg-neutral-900/60 dark:hover:border-neutral-700">
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
               {featuredPost.cover_url && (
                 <div className="lg:col-span-5 overflow-hidden rounded-xl">
@@ -180,7 +180,7 @@ export default function Home() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 dark:border-neutral-800 dark:bg-neutral-900"
+                  className="animate-pulse rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 dark:border-neutral-800 dark:bg-neutral-900"
                 >
                   <div className="h-6 w-3/4 bg-slate-200 dark:bg-neutral-800 rounded mb-3" />
                   <div className="h-4 w-full bg-slate-200 dark:bg-neutral-800 rounded mb-2" />
@@ -189,7 +189,7 @@ export default function Home() {
               ))}
             </div>
           ) : displayPosts.length === 0 ? (
-            <div className="rounded-2xl border border-[#e2e5ec] bg-[#f7f8fa] p-12 text-center shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-12 text-center shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
               <h3 className="text-lg font-bold text-[#111318] dark:text-white">
                 No articles published yet
               </h3>
@@ -209,11 +209,11 @@ export default function Home() {
               {displayPosts.map((post) => (
                 <article
                   key={post.id}
-                  className="group rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 transition-all hover:border-[#1d63ed]/40 hover:bg-white hover:shadow-xs dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
+                  className="group rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 transition-all hover:border-[#1d63ed]/40 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
                 >
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                     {post.cover_url && (
-                      <div className="h-40 w-full sm:h-32 sm:w-48 shrink-0 overflow-hidden rounded-xl bg-slate-200 dark:bg-neutral-800">
+                      <div className="h-40 w-full sm:h-32 sm:w-48 shrink-0 overflow-hidden rounded-xl bg-slate-100 dark:bg-neutral-800">
                         <img
                           src={post.cover_url}
                           alt={post.title}
@@ -287,7 +287,7 @@ export default function Home() {
             <button
               onClick={() => handlePageChange(pageParam - 1)}
               disabled={pageParam <= 1}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-white px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-100 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-50 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </button>
@@ -300,7 +300,7 @@ export default function Home() {
             <button
               onClick={() => handlePageChange(pageParam + 1)}
               disabled={pageParam >= totalPages}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-white px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-100 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d5dae5] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#111318] transition hover:bg-slate-50 disabled:opacity-40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
             >
               Next <ChevronRight className="h-4 w-4" />
             </button>

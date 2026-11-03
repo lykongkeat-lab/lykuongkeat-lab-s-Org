@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Github, 
-  Linkedin, 
-  Twitter, 
+  Send, 
+  Facebook, 
   Mail, 
   Folder, 
   Tag as TagIcon, 
@@ -90,10 +90,13 @@ export default function Sidebar() {
     siteSettings?.author_avatar ||
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
+  const telegramUrl = siteSettings?.social_telegram || siteSettings?.social_linkedin;
+  const facebookUrl = siteSettings?.social_facebook || siteSettings?.social_twitter;
+
   return (
     <aside className="w-full space-y-8">
       {/* 1. Author Profile Card */}
-      <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-2xs transition-colors dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs transition-colors dark:border-neutral-800 dark:bg-neutral-900">
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-full ring-4 ring-[#2bb8d6]/40 dark:ring-neutral-800">
             <img
@@ -122,38 +125,42 @@ export default function Sidebar() {
                 href={siteSettings.social_github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-white border border-[#e2e5ec] p-2.5 text-[#111318] transition hover:bg-[#182238] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#111318] transition hover:bg-[#061946] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                 aria-label="GitHub Profile"
+                title="GitHub"
               >
                 <Github className="h-4 w-4" />
               </a>
             )}
-            {siteSettings?.social_linkedin && (
+            {telegramUrl && (
               <a
-                href={siteSettings.social_linkedin}
+                href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-white border border-[#e2e5ec] p-2.5 text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
-                aria-label="LinkedIn Profile"
+                className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#0088cc] transition hover:bg-[#0088cc] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                aria-label="Telegram Profile"
+                title="Telegram"
               >
-                <Linkedin className="h-4 w-4" />
+                <Send className="h-4 w-4" />
               </a>
             )}
-            {siteSettings?.social_twitter && (
+            {facebookUrl && (
               <a
-                href={siteSettings.social_twitter}
+                href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-white border border-[#e2e5ec] p-2.5 text-[#1595d6] transition hover:bg-[#1595d6] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
-                aria-label="Twitter Profile"
+                className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#1877f2] transition hover:bg-[#1877f2] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                aria-label="Facebook Profile"
+                title="Facebook"
               >
-                <Twitter className="h-4 w-4" />
+                <Facebook className="h-4 w-4" />
               </a>
             )}
             <Link
               to="/contact"
-              className="rounded-full bg-white border border-[#e2e5ec] p-2.5 text-[#2eb886] transition hover:bg-[#2eb886] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+              className="rounded-full bg-[#ffffff] border border-[#e2e5ec] p-2.5 text-[#2eb886] transition hover:bg-[#2eb886] hover:text-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
               aria-label="Contact Message"
+              title="Contact"
             >
               <Mail className="h-4 w-4" />
             </Link>
@@ -175,7 +182,7 @@ export default function Sidebar() {
       <AdSlot slot="sidebar_top" />
 
       {/* 3. Newsletter Subscription */}
-      <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900/50">
+      <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900/50">
         <div className="mb-2 flex items-center gap-2 text-[#111318] dark:text-white">
           <Mail className="h-5 w-5 text-[#0d47e1] dark:text-[#3cd0a8]" />
           <h3 className="text-base font-bold">Tech Newsletter</h3>
@@ -191,7 +198,7 @@ export default function Sidebar() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@domain.com"
             required
-            className="w-full rounded-xl border border-[#d5dae5] bg-white px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+            className="w-full rounded-xl border border-[#d5dae5] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
           />
           <button
             type="submit"
@@ -219,7 +226,7 @@ export default function Sidebar() {
 
       {/* 4. Recent Posts */}
       {recentPosts.length > 0 && (
-        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
           <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-[#6b4c1b] dark:text-neutral-400">
             Recent Articles
           </h3>
@@ -257,7 +264,7 @@ export default function Sidebar() {
 
       {/* 5. Categories */}
       {categories.length > 0 && (
-        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
           <div className="mb-4 flex items-center gap-2">
             <Folder className="h-4 w-4 text-[#0d47e1] dark:text-[#3cd0a8]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#111318] dark:text-neutral-400">
@@ -269,7 +276,7 @@ export default function Sidebar() {
               <li key={cat.id}>
                 <Link
                   to={`/category/${cat.slug}`}
-                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm font-medium text-[#2c313c] transition hover:bg-white hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
+                  className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm font-medium text-[#2c313c] transition hover:bg-slate-50 hover:text-[#0d47e1] dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
                 >
                   <span>{cat.name}</span>
                   <ArrowRight className="h-3 w-3 text-[#0d47e1] opacity-70" />
@@ -282,7 +289,7 @@ export default function Sidebar() {
 
       {/* 6. Tags Cloud */}
       {tags.length > 0 && (
-        <div className="rounded-2xl border border-[#e2e5ec] bg-[#f8f9fa] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900">
           <div className="mb-3 flex items-center gap-2">
             <TagIcon className="h-4 w-4 text-[#0d47e1] dark:text-[#3cd0a8]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#111318] dark:text-neutral-400">
@@ -294,7 +301,7 @@ export default function Sidebar() {
               <Link
                 key={tag.id}
                 to={`/tag/${tag.slug}`}
-                className="rounded-md border border-[#d5dae5] bg-white px-2.5 py-1 text-xs font-semibold text-[#2c313c] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400"
+                className="rounded-md border border-[#d5dae5] bg-[#ffffff] px-2.5 py-1 text-xs font-semibold text-[#2c313c] transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400"
               >
                 #{tag.name}
               </Link>
