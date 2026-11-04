@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
   Download, 
+  Printer,
   Briefcase, 
   GraduationCap, 
   Code, 
@@ -73,10 +74,10 @@ export default function CVPage() {
 
   return (
     <Layout showSidebar={false} className="max-w-4xl mx-auto">
-      <div className="space-y-12">
+      <div className="space-y-12 cv-printable">
         {/* CV Hero Header */}
         <div className="rounded-3xl border border-[#e2e5ec] bg-[#ffffff] p-8 sm:p-10 shadow-xs dark:border-neutral-800 dark:bg-neutral-900/40">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
                 <Sparkles className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> {t('cv_badge')}
@@ -92,19 +93,28 @@ export default function CVPage() {
               </p>
             </div>
 
-            {settings?.cv_pdf_url && (
-              <div className="shrink-0">
+            <div className="no-print flex flex-wrap items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:brightness-110 cursor-pointer"
+              >
+                <Printer className="h-4 w-4" />
+                {t('print_cv')}
+              </button>
+
+              {settings?.cv_pdf_url && (
                 <a
                   href={settings.cv_pdf_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-110"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[#e2e5ec] bg-[#ffffff] px-4 py-2.5 text-sm font-bold text-[#111318] shadow-2xs transition hover:border-[#0d47e1] hover:text-[#0d47e1] dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:hover:border-[#05dcef] dark:hover:text-[#05dcef]"
                 >
                   <Download className="h-4 w-4" />
                   {t('download_pdf')}
                 </a>
-              </div>
-            )}
+              )}
+            </div>
           </div>
           <div className="mt-6 h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
         </div>

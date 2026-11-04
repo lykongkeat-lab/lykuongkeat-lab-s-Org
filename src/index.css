@@ -47,3 +47,25 @@ html[lang="km"] body {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  [data-theme="dark"] body {
+    background-color: #ffffff !important;
+    color: #111318 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cv-printable section,
+  .cv-printable .group {
+    break-inside: avoid;
+  }
+}
+

@@ -85,6 +85,7 @@ const translations = {
     // CV Page
     cv_badge: 'Curriculum Vitae',
     download_pdf: 'Download PDF',
+    print_cv: 'Print CV',
     cv_updating_title: 'CV Content Being Updated',
     cv_updating_desc: 'The CV sections will appear here as soon as they are added in the admin dashboard.',
 
@@ -206,6 +207,7 @@ const translations = {
     // CV Page
     cv_badge: 'ប្រវត្តិរូបសង្ខេប (CV)',
     download_pdf: 'ទាញយក PDF',
+    print_cv: 'បោះពុម្ព CV',
     cv_updating_title: 'ទិន្នន័យ CV កំពុងត្រូវបានធ្វើបច្ចុប្បន្នភាព',
     cv_updating_desc: 'ផ្នែកនៃប្រវត្តិរូបនឹងបង្ហាញនៅទីនេះនៅពេលត្រូវបានបន្ថែមក្នុងផ្ទាំងគ្រប់គ្រង។',
 
