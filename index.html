@@ -12,9 +12,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&family=Kantumruy+Pro:ital,wght@0,300..700;1,300..700&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400..700;1,400..700&family=Kantumruy+Pro:ital,wght@0,300..700;1,300..700&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,300..800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (function () {
+        try {
+          localStorage.removeItem('theme');
+          var mode = sessionStorage.getItem('theme_mode') || 'auto';
+          var hour = new Date().getHours();
+          var autoTheme = hour >= 6 && hour < 18 ? 'light' : 'dark';
+          var resolved = mode === 'auto' ? autoTheme : mode;
+          document.documentElement.setAttribute('data-theme', resolved);
+          if (resolved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

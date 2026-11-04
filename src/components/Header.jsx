@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Sun, 
-  Moon, 
   Search, 
   Menu, 
   X, 
@@ -16,17 +14,11 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useLanguage } from '../lib/LanguageContext';
+import { useTheme } from '../lib/ThemeContext';
 import { getSiteSettings } from '../lib/api';
 
 export default function Header() {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
-      if (stored) return stored;
-      return 'light';
-    }
-    return 'light';
-  });
+  useTheme();
 
   const [siteSettings, setSiteSettings] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,13 +29,6 @@ export default function Header() {
   const { lang, toggleLang, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Apply data-theme attribute on <html> element
-  useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
 
   // Load site settings (title, tagline)
   useEffect(() => {
@@ -63,10 +48,6 @@ export default function Header() {
     setMobileMenuOpen(false);
     setSearchOpen(false);
   }, [location.pathname]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -149,20 +130,6 @@ export default function Header() {
             aria-label={t('search_btn')}
           >
             <Search className="h-4 w-4" />
-          </button>
-
-          {/* Theme Switcher with warm amber icon */}
-          <button
-            onClick={toggleTheme}
-            className="rounded-xl border border-amber-400/20 bg-[#232429] p-2.5 text-[#f6c453] shadow-[0_0_12px_rgba(245,158,11,0.15)] transition-all hover:border-amber-400/40 hover:bg-[#2e2f36] hover:text-amber-300"
-            aria-label={theme === 'dark' ? t('theme_light') : t('theme_dark')}
-            title={theme === 'dark' ? t('theme_light') : t('theme_dark')}
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-[#f6c453]" />
-            ) : (
-              <Moon className="h-4 w-4 text-[#f6c453]" />
-            )}
           </button>
 
           {/* Admin Pill Button with Blue-to-Emerald Gradient */}

@@ -15,33 +15,20 @@ import {
   Globe, 
   Menu, 
   X, 
-  Sun, 
-  Moon,
   Languages
 } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
 import { useLanguage } from '../../lib/LanguageContext';
+import { useTheme } from '../../lib/ThemeContext';
 
 export default function AdminLayout({ children, title, subtitle }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.getAttribute('data-theme') || 'light';
-    }
-    return 'light';
-  });
+  useTheme();
 
   const { user, profile, logout } = useAuth();
   const { lang, toggleLang } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('theme', nextTheme);
-  };
 
   const handleLogout = async () => {
     try {
@@ -182,14 +169,6 @@ export default function AdminLayout({ children, title, subtitle }) {
             >
               <Languages className="h-3.5 w-3.5 text-[#0d47e1] dark:text-[#3cd0a8]" />
               <span>{lang === 'en' ? 'ភាសាខ្មែរ' : 'English'}</span>
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              className="rounded-lg bg-[#2a2723] p-2 text-[#f6c453] shadow-[0_0_12px_rgba(245,158,11,0.25)] transition hover:brightness-110"
-              title="Toggle Dark / Light Theme"
-            >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
 
             <Link
