@@ -1003,7 +1003,28 @@ export async function getSiteSettings(key = 'general') {
       .maybeSingle();
 
     if (error) throw error;
-    return data?.value || null;
+    const settingsValue = data?.value ? { ...data.value } : null;
+
+    if (
+      key === 'general' &&
+      settingsValue &&
+      (!settingsValue.author_avatar ||
+        settingsValue.author_avatar.includes('photo-1534528741775-53994a69daeb'))
+    ) {
+      const { data: latestMedia } = await supabase
+        .from('media')
+        .select('public_url, mime_type')
+        .ilike('mime_type', 'image/%')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (latestMedia?.public_url) {
+        settingsValue.author_avatar = latestMedia.public_url;
+      }
+    }
+
+    return settingsValue;
   } catch (err) {
     console.error('getSiteSettings error:', err);
     return null;

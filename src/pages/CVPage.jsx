@@ -71,6 +71,9 @@ export default function CVPage() {
   const authorName = settings?.author_name || 'Ly Kuongkeat';
   const authorTitle = settings?.author_title || 'Software Engineer';
   const authorBio = settings?.author_bio || 'Specializing in full-stack web architectures, React, TypeScript, and cloud-native solutions.';
+  const authorAvatar =
+    settings?.author_avatar ||
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
   return (
     <Layout showSidebar={false} className="max-w-4xl mx-auto">
@@ -78,22 +81,32 @@ export default function CVPage() {
         {/* CV Hero Header */}
         <div className="rounded-3xl border border-[#e2e5ec] bg-[#ffffff] p-8 sm:p-10 shadow-xs dark:border-neutral-800 dark:bg-neutral-900/40">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-            <div className="space-y-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
-                <Sparkles className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> {t('cv_badge')}
-              </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#111318] dark:text-white">
-                {authorName}
-              </h1>
-              <p className="text-base font-bold text-[#0d47e1] dark:text-[#05dcef]">
-                {authorTitle}
-              </p>
-              <p className="max-w-xl text-sm leading-relaxed text-[#2c313c] dark:text-neutral-300 pt-1">
-                {authorBio}
-              </p>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+              <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 overflow-hidden rounded-2xl ring-4 ring-[#2bb8d6] shadow-sm dark:ring-neutral-800">
+                <img
+                  src={authorAvatar}
+                  alt={authorName}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#efe4c8] px-3.5 py-1 text-xs font-semibold text-[#6b4c1b] dark:bg-[#05dcef]/20 dark:text-[#05dcef]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#8c6222] dark:text-[#05dcef]" /> {t('cv_badge')}
+                </span>
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#111318] dark:text-white">
+                  {authorName}
+                </h1>
+                <p className="text-base font-bold text-[#0d47e1] dark:text-[#05dcef]">
+                  {authorTitle}
+                </p>
+                <p className="max-w-xl text-sm leading-relaxed text-[#2c313c] dark:text-neutral-300 pt-1">
+                  {authorBio}
+                </p>
+              </div>
             </div>
 
-            <div className="no-print flex flex-wrap items-center gap-2.5 shrink-0">
+            <div className="no-print flex flex-wrap items-center justify-center sm:justify-end gap-2.5 shrink-0">
               <button
                 type="button"
                 onClick={() => window.print()}
