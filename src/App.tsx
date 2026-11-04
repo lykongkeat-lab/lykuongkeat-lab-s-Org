@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './lib/AuthContext';
 import { LanguageProvider } from './lib/LanguageContext';
 
@@ -27,11 +27,39 @@ import CVAdmin from './pages/admin/CVAdmin';
 import MessagesAdmin from './pages/admin/MessagesAdmin';
 import SettingsAdmin from './pages/admin/SettingsAdmin';
 
+function RoutePersistence() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    const fullPath = location.pathname + location.search;
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      const savedRoute = sessionStorage.getItem('last_spa_route');
+      if (location.pathname === '/' && savedRoute && savedRoute !== '/') {
+        navigate(savedRoute, { replace: true });
+        return;
+      }
+    }
+
+    if (location.pathname === '/') {
+      sessionStorage.removeItem('last_spa_route');
+    } else {
+      sessionStorage.setItem('last_spa_route', fullPath);
+    }
+  }, [location.pathname, location.search, navigate]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
         <BrowserRouter>
+          <RoutePersistence />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />

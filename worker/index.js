@@ -203,10 +203,14 @@ export default {
       try {
         let response = await env.ASSETS.fetch(request);
 
-        // If not found and not a static file extension, fallback to index.html for client-side routing
+        // If not found and not a static file extension, serve root SPA HTML with 200 status (no redirect)
         if (response.status === 404 && !url.pathname.includes('.')) {
-          const indexUrl = new URL('/index.html', request.url);
-          response = await env.ASSETS.fetch(new Request(indexUrl, request));
+          const rootUrl = new URL('/', request.url);
+          const rootRes = await env.ASSETS.fetch(new Request(rootUrl, request));
+          return new Response(rootRes.body, {
+            status: 200,
+            headers: rootRes.headers,
+          });
         }
 
         return response;

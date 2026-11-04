@@ -112,7 +112,7 @@ export default function AdminLayout({ children, title, subtitle }) {
         <div className="border-t border-[#e2e5ec] p-4 dark:border-neutral-800 space-y-3">
           <Link
             to="/"
-            target="_blank"
+            onClick={() => sessionStorage.removeItem('last_spa_route')}
             className="flex items-center justify-between rounded-xl border border-[#e2e5ec] bg-[#ffffff] px-3 py-2 text-xs font-bold text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
             <span className="flex items-center gap-2">
