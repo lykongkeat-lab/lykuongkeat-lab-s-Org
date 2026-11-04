@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Megaphone, 
   PlusCircle, 
@@ -13,11 +13,37 @@ import {
   ExternalLink,
   Code2,
   Image as ImageIcon,
-  Sparkles
+  Sparkles,
+  Upload,
+  FolderOpen,
+  RefreshCw
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdSlot from '../../components/AdSlot';
-import { getAllAds, createAd, updateAd, deleteAd } from '../../lib/api';
+import { getAllAds, createAd, updateAd, deleteAd, getMediaList, uploadMediaFile } from '../../lib/api';
+import wideAdBanner from '../../assets/images/ad_banner_wide_1793757810474.jpg';
+import sidebarAdBanner from '../../assets/images/ad_banner_sidebar_1793757811367.jpg';
+
+const PRESET_BANNERS = [
+  {
+    id: 'wide_cloud',
+    label: 'Wide Tech Banner (16:9)',
+    slotHint: 'header',
+    defaultName: 'Empowering Modern Dev Teams Banner',
+    url: wideAdBanner,
+    width: 728,
+    height: 180,
+  },
+  {
+    id: 'sidebar_cloud',
+    label: 'Sidebar Cloud Card (4:3)',
+    slotHint: 'sidebar_top',
+    defaultName: 'Cloud Architecture Sponsor Ad',
+    url: sidebarAdBanner,
+    width: 360,
+    height: 270,
+  },
+];
 
 const SLOTS = [
   { value: 'header', label: 'Header (Top Banner)' },
@@ -53,6 +79,11 @@ export default function AdsAdmin() {
 
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [mediaItems, setMediaItems] = useState([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const fileInputRef = useRef(null);
 
   const loadAds = async () => {
     setLoading(true);
@@ -70,17 +101,69 @@ export default function AdsAdmin() {
     loadAds();
   }, []);
 
+  const handleImageFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setErrorMsg('');
+
+    try {
+      const result = await uploadMediaFile(file, form.name || 'Advertisement Banner');
+      if (result?.public_url) {
+        setForm((prev) => ({
+          ...prev,
+          image_url: result.public_url,
+          name: prev.name || file.name.replace(/\.[^/.]+$/, ''),
+        }));
+      }
+    } catch (err) {
+      console.error('Ad image upload error:', err);
+      setErrorMsg(err.message || 'Could not upload image.');
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const openMediaLibraryPicker = async () => {
+    setShowMediaPicker(true);
+    setLoadingMedia(true);
+    try {
+      const res = await getMediaList({ page: 1, limit: 24 });
+      const imagesOnly = (res.data || []).filter((item) =>
+        item.mime_type?.startsWith('image/')
+      );
+      setMediaItems(imagesOnly);
+    } catch (err) {
+      console.error('Failed to load media library:', err);
+    } finally {
+      setLoadingMedia(false);
+    }
+  };
+
+  const applyPresetBanner = (preset) => {
+    setForm((prev) => ({
+      ...prev,
+      name: prev.name.trim() ? prev.name : preset.defaultName,
+      image_url: preset.url,
+      width: prev.width || String(preset.width),
+      height: prev.height || String(preset.height),
+    }));
+    setErrorMsg('');
+  };
+
   const openCreateModal = () => {
     setEditingAd(null);
     setForm({
-      name: '',
-      slot: 'sidebar_top',
+      name: 'Empowering Modern Dev Teams Banner',
+      slot: 'header',
       ad_type: 'image',
-      image_url: '',
+      image_url: wideAdBanner,
       link_url: '',
       script_code: '',
-      width: '',
-      height: '',
+      width: '728',
+      height: '180',
       position: ads.length,
       is_active: true,
       starts_at: '',
@@ -281,6 +364,7 @@ export default function AdsAdmin() {
                               <img
                                 src={ad.image_url}
                                 alt=""
+                                referrerPolicy="no-referrer"
                                 className="h-10 w-16 shrink-0 rounded object-cover bg-neutral-100 dark:bg-neutral-800"
                               />
                             ) : (
@@ -504,16 +588,103 @@ export default function AdsAdmin() {
                 {form.ad_type === 'image' ? (
                   <div className="space-y-4 rounded-2xl bg-neutral-50 p-4 dark:bg-neutral-900/50">
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">
-                        Image URL (or R2 CDN link) *
-                      </label>
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                          Image URL (or R2 CDN link) *
+                        </label>
+                        <div className="flex items-center gap-1.5">
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageFileSelect}
+                            className="hidden"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploadingImage}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-[11px] font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-50 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 cursor-pointer"
+                          >
+                            {uploadingImage ? (
+                              <RefreshCw className="h-3 w-3 animate-spin" />
+                            ) : (
+                              <Upload className="h-3 w-3" />
+                            )}
+                            {uploadingImage ? 'Uploading...' : 'Choose Image'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={openMediaLibraryPicker}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 cursor-pointer"
+                          >
+                            <FolderOpen className="h-3 w-3" />
+                            Library
+                          </button>
+                        </div>
+                      </div>
+
                       <input
-                        type="url"
+                        type="text"
                         value={form.image_url}
                         onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                         placeholder="https://... image banner"
                         className="w-full rounded-xl border border-neutral-300 bg-white px-3.5 py-2 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                       />
+
+                      {/* Ready-Made Ad Banner Presets */}
+                      <div className="mt-3 space-y-2">
+                        <p className="text-[11px] font-semibold text-neutral-500 dark:text-neutral-400">
+                          Ready-Made Ad Banners (click to use):
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                          {PRESET_BANNERS.map((preset) => {
+                            const isSelected = form.image_url === preset.url;
+                            return (
+                              <button
+                                key={preset.id}
+                                type="button"
+                                onClick={() => applyPresetBanner(preset)}
+                                className={`group flex items-center gap-2.5 rounded-xl border p-2 text-left transition cursor-pointer ${
+                                  isSelected
+                                    ? 'border-blue-600 bg-blue-50/60 dark:border-cyan-400 dark:bg-cyan-950/30'
+                                    : 'border-neutral-200 bg-white hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900'
+                                }`}
+                              >
+                                <img
+                                  src={preset.url}
+                                  alt={preset.label}
+                                  referrerPolicy="no-referrer"
+                                  className="h-12 w-20 shrink-0 rounded-lg object-cover"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-xs font-bold text-neutral-900 dark:text-white">
+                                    {preset.label}
+                                  </p>
+                                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                                    {preset.width} × {preset.height}px
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Live Preview */}
+                      {form.image_url && (
+                        <div className="mt-3 rounded-xl border border-neutral-200 bg-white p-2.5 dark:border-neutral-800 dark:bg-neutral-900">
+                          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+                            Banner Preview
+                          </p>
+                          <img
+                            src={form.image_url}
+                            alt="Ad Banner Preview"
+                            referrerPolicy="no-referrer"
+                            className="max-h-40 w-full rounded-lg object-contain bg-neutral-950/5 dark:bg-neutral-950"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -631,6 +802,62 @@ export default function AdsAdmin() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Media Library Picker Modal for Ad Image */}
+        {showMediaPicker && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+            <div className="w-full max-w-2xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-xl dark:border-neutral-800 dark:bg-neutral-900">
+              <div className="flex items-center justify-between border-b border-neutral-200 pb-3 dark:border-neutral-800">
+                <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                  Choose Advertisement Image from Media Library
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowMediaPicker(false)}
+                  className="rounded-lg p-1 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mt-4 max-h-80 overflow-y-auto">
+                {loadingMedia ? (
+                  <div className="py-12 text-center text-xs text-neutral-500">
+                    Loading uploaded images...
+                  </div>
+                ) : mediaItems.length === 0 ? (
+                  <div className="py-12 text-center text-xs text-neutral-500">
+                    No images found in Media Library. Click "Choose Image" to upload a file directly.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                    {mediaItems.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          setForm((prev) => ({
+                            ...prev,
+                            image_url: item.public_url,
+                          }));
+                          setShowMediaPicker(false);
+                        }}
+                        className="group relative aspect-video overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 transition hover:border-blue-600 hover:ring-2 hover:ring-blue-500/30 dark:border-neutral-800 dark:bg-neutral-800"
+                      >
+                        <img
+                          src={item.public_url}
+                          alt={item.alt_text || item.file_name}
+                          referrerPolicy="no-referrer"
+                          className="h-full w-full object-cover transition group-hover:scale-105"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

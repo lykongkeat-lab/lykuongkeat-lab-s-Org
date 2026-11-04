@@ -88,6 +88,7 @@ export default function AdSlot({ slot, className = '' }) {
                 <img
                   src={ad.image_url}
                   alt={ad.name || 'Advertisement'}
+                  referrerPolicy="no-referrer"
                   style={{
                     maxWidth: ad.width ? `${ad.width}px` : '100%',
                     maxHeight: ad.height ? `${ad.height}px` : 'auto',
