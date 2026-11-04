@@ -15,7 +15,7 @@ export default {
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-supabase-url, x-supabase-anon-key',
     };
 
     // Handle OPTIONS Preflight
@@ -70,8 +70,10 @@ export default {
       }
 
       try {
-        const supabaseUrl = env.SUPABASE_URL;
-        const supabaseAnonKey = env.SUPABASE_ANON_KEY;
+        const envUrl = env.SUPABASE_URL && !env.SUPABASE_URL.includes('your-project') ? env.SUPABASE_URL : '';
+        const envKey = env.SUPABASE_ANON_KEY && !env.SUPABASE_ANON_KEY.includes('your-anon-key') ? env.SUPABASE_ANON_KEY : '';
+        const supabaseUrl = envUrl || request.headers.get('x-supabase-url') || '';
+        const supabaseAnonKey = envKey || request.headers.get('x-supabase-anon-key') || '';
 
         if (!supabaseUrl || !supabaseAnonKey) {
           return new Response(

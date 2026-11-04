@@ -762,23 +762,54 @@ function compressImageToDataUrl(file, maxSize = 512, quality = 0.85) {
 }
 
 export async function uploadMediaFile(file, altText = '') {
-  try {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const token = session?.access_token;
+  const clientSupabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+  const clientSupabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+  const attemptR2Upload = async (token) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('alt_text', altText || file.name);
 
-    const response = await fetch('/api/upload', {
+    return fetch('/api/upload', {
       method: 'POST',
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(clientSupabaseUrl ? { 'x-supabase-url': clientSupabaseUrl } : {}),
+        ...(clientSupabaseKey ? { 'x-supabase-anon-key': clientSupabaseKey } : {}),
       },
       body: formData,
     });
+  };
+
+  let activeUser = null;
+
+  try {
+    let {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const nowSec = Math.floor(Date.now() / 1000);
+    if (!session || (session.expires_at && session.expires_at - nowSec < 120)) {
+      const { data: refreshed } = await supabase.auth.refreshSession();
+      if (refreshed?.session) {
+        session = refreshed.session;
+      }
+    }
+
+    activeUser = session?.user || null;
+    let token = session?.access_token;
+
+    let response = await attemptR2Upload(token);
+
+    // If token was rejected as expired/invalid, force a session refresh and retry once
+    if (response.status === 401) {
+      const { data: refreshed } = await supabase.auth.refreshSession();
+      if (refreshed?.session?.access_token) {
+        token = refreshed.session.access_token;
+        activeUser = refreshed.session.user || activeUser;
+        response = await attemptR2Upload(token);
+      }
+    }
 
     if (response.ok) {
       const result = await response.json();
@@ -791,13 +822,32 @@ export async function uploadMediaFile(file, altText = '') {
     console.warn('R2 worker upload fallback triggered:', err.message);
   }
 
-  // Fallback for images when Worker R2 endpoint is not reachable (e.g. local dev)
+  // Fallback for images when Worker R2 endpoint or Worker env vars are unavailable
   if (file.type && file.type.startsWith('image/')) {
-    const dataUrl = await compressImageToDataUrl(file);
-    return { public_url: dataUrl, media: null, source: 'local' };
+    const dataUrl = await compressImageToDataUrl(file, 720, 0.85);
+    let createdRecord = null;
+    try {
+      const timestamp = Date.now();
+      const cleanName = file.name
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      createdRecord = await createMediaRecord({
+        uploaded_by: activeUser?.id || null,
+        object_key: `inline/${timestamp}-${cleanName}`,
+        public_url: dataUrl,
+        file_name: file.name,
+        mime_type: file.type || 'image/jpeg',
+        size_bytes: file.size || 0,
+        alt_text: altText || file.name,
+      });
+    } catch (dbErr) {
+      console.warn('Could not insert fallback media record:', dbErr.message);
+    }
+    return { public_url: dataUrl, media: createdRecord, source: 'local' };
   }
 
-  throw new Error('Upload failed. Ensure Cloudflare Worker R2 endpoint is configured.');
+  throw new Error('Upload failed. Please sign out and sign back in, or check Cloudflare Worker R2 configuration.');
 }
 
 

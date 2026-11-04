@@ -5,23 +5,25 @@ import {
   Trash2, 
   Copy, 
   Check, 
-  ExternalLink, 
-  FileText, 
-  AlertCircle 
+  FileText,
+  UserCheck
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getMediaList, deleteMediaRecord, createMediaRecord } from '../../lib/api';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../lib/AuthContext';
+import { 
+  getMediaList, 
+  deleteMediaRecord, 
+  uploadMediaFile, 
+  getSiteSettings, 
+  updateSiteSettings 
+} from '../../lib/api';
 
 export default function MediaAdmin() {
   const [mediaList, setMediaList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [settingAvatarId, setSettingAvatarId] = useState(null);
   const [statusMsg, setStatusMsg] = useState({ state: 'idle', message: '' });
-
-  const { user } = useAuth();
 
   const loadMedia = async () => {
     setLoading(true);
@@ -47,40 +49,47 @@ export default function MediaAdmin() {
     setStatusMsg({ state: 'loading', message: `Uploading ${file.name}...` });
 
     try {
-      // Get auth token from supabase session
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('alt_text', file.name);
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: formData,
+      const result = await uploadMediaFile(file, file.name);
+      setStatusMsg({
+        state: 'success',
+        message:
+          result.source === 'r2'
+            ? 'File uploaded successfully to Cloudflare R2!'
+            : 'Image processed and saved to Media Library!',
       });
-
-      if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        throw new Error(errJson.error || `Upload failed with HTTP ${response.status}`);
-      }
-
-      const uploadResult = await response.json();
-      setStatusMsg({ state: 'success', message: 'File uploaded successfully to R2!' });
-
       await loadMedia();
     } catch (err) {
-      console.warn('API Upload endpoint error, providing fallback record creation option:', err.message);
+      console.warn('Upload error:', err.message);
       setStatusMsg({
         state: 'error',
-        message: err.message || 'Worker upload endpoint unavailable. Ensure Cloudflare Worker is deployed.',
+        message: err.message || 'Upload failed. Please sign out and sign back in to refresh your session.',
       });
     } finally {
       setUploading(false);
       e.target.value = '';
+    }
+  };
+
+  const handleSetAsAvatar = async (media) => {
+    setSettingAvatarId(media.id);
+    setStatusMsg({ state: 'loading', message: 'Updating Author Avatar...' });
+    try {
+      const currentSettings = (await getSiteSettings('general')) || {};
+      await updateSiteSettings('general', {
+        ...currentSettings,
+        author_avatar: media.public_url,
+      });
+      setStatusMsg({
+        state: 'success',
+        message: `"${media.file_name}" is now set as your Author Avatar!`,
+      });
+    } catch (err) {
+      setStatusMsg({
+        state: 'error',
+        message: 'Failed to update Author Avatar: ' + (err.message || 'Unknown error'),
+      });
+    } finally {
+      setSettingAvatarId(null);
     }
   };
 
@@ -187,12 +196,25 @@ export default function MediaAdmin() {
                       <p className="truncate text-xs font-bold text-neutral-900 dark:text-white" title={media.file_name}>
                         {media.file_name}
                       </p>
-                      <p className="text-[10px] text-neutral-400">
-                        {(media.size_bytes / 1024).toFixed(1)} KB
+                      <p className="text-[10px] text-neutral-400 font-mono tabular-nums">
+                        {((media.size_bytes || 0) / 1024).toFixed(1)} KB
                       </p>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-2 dark:border-neutral-800">
+                    {isImage && (
+                      <button
+                        type="button"
+                        disabled={settingAvatarId === media.id}
+                        onClick={() => handleSetAsAvatar(media)}
+                        className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-lg bg-[#0d47e1]/10 px-2 py-1 text-[11px] font-semibold text-[#0d47e1] transition hover:bg-[#0d47e1] hover:text-white disabled:opacity-50 dark:bg-[#05dcef]/15 dark:text-[#05dcef] dark:hover:bg-[#05dcef] dark:hover:text-neutral-950"
+                        title="Use this photo as your Author Avatar"
+                      >
+                        <UserCheck className="h-3 w-3" />
+                        <span>{settingAvatarId === media.id ? 'Saving...' : 'Set as Avatar'}</span>
+                      </button>
+                    )}
+
+                    <div className="mt-2 flex items-center justify-between border-t border-neutral-100 pt-2 dark:border-neutral-800">
                       <button
                         onClick={() => handleCopy(media.public_url, media.id)}
                         className={`inline-flex items-center gap-1 text-[11px] font-semibold transition ${
@@ -223,3 +245,4 @@ export default function MediaAdmin() {
     </AdminLayout>
   );
 }
+
