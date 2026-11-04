@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -16,7 +16,11 @@ import {
   Check, 
   AlertCircle,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Upload,
+  FolderOpen,
+  RefreshCw,
+  X
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { 
@@ -24,7 +28,9 @@ import {
   createPost, 
   updatePost, 
   getCategories, 
-  getOrCreateTags 
+  getOrCreateTags,
+  getMediaList,
+  uploadMediaFile
 } from '../../lib/api';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -56,6 +62,13 @@ export default function PostEditor() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [readingTime, setReadingTime] = useState(3);
   const [tagsInput, setTagsInput] = useState('');
+
+  // Cover Image Upload & Media Library Picker state
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [mediaItems, setMediaItems] = useState([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const coverInputRef = useRef(null);
 
   // Load categories
   useEffect(() => {
@@ -128,6 +141,45 @@ export default function PostEditor() {
     const words = newContent.trim().split(/\s+/).filter(Boolean).length;
     const minutes = Math.max(1, Math.ceil(words / 200));
     setReadingTime(minutes);
+  };
+
+  const handleCoverFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingCover(true);
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    try {
+      const result = await uploadMediaFile(file, title || 'Article Cover');
+      if (result?.public_url) {
+        setCoverUrl(result.public_url);
+        setSuccessMsg('Cover image uploaded and selected!');
+      }
+    } catch (err) {
+      console.error('Cover upload error:', err);
+      setErrorMsg(err.message || 'Could not upload cover image.');
+    } finally {
+      setUploadingCover(false);
+      if (coverInputRef.current) coverInputRef.current.value = '';
+    }
+  };
+
+  const openMediaLibraryPicker = async () => {
+    setShowMediaPicker(true);
+    setLoadingMedia(true);
+    try {
+      const res = await getMediaList({ page: 1, limit: 24 });
+      const imagesOnly = (res.data || []).filter((item) =>
+        item.mime_type?.startsWith('image/')
+      );
+      setMediaItems(imagesOnly);
+    } catch (err) {
+      console.error('Failed to load media library:', err);
+    } finally {
+      setLoadingMedia(false);
+    }
   };
 
   // Render preview safely with DOMPurify
@@ -561,15 +613,48 @@ export default function PostEditor() {
 
             {/* Cover Image URL */}
             <div className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 space-y-4">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4 text-emerald-600" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  Cover Image
-                </h3>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 text-emerald-600" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                    Cover Image
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <input
+                    ref={coverInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverFileSelect}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => coverInputRef.current?.click()}
+                    disabled={uploadingCover}
+                    className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 px-2.5 py-1 text-[11px] font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-50 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 cursor-pointer"
+                  >
+                    {uploadingCover ? (
+                      <RefreshCw className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Upload className="h-3 w-3" />
+                    )}
+                    {uploadingCover ? 'Uploading...' : 'Choose Image'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openMediaLibraryPicker}
+                    className="inline-flex items-center gap-1 rounded-lg border border-neutral-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 cursor-pointer"
+                  >
+                    <FolderOpen className="h-3 w-3" />
+                    Library
+                  </button>
+                </div>
               </div>
 
               <input
-                type="url"
+                type="text"
                 value={coverUrl}
                 onChange={(e) => setCoverUrl(e.target.value)}
                 placeholder="https://... image URL (or Cloudflare R2 URL)"
@@ -577,21 +662,26 @@ export default function PostEditor() {
               />
 
               {coverUrl ? (
-                <div className="overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800">
+                <div className="relative overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800">
                   <img
                     src={coverUrl}
                     alt="Cover Preview"
-                    className="h-32 w-full object-cover"
+                    referrerPolicy="no-referrer"
+                    className="h-36 w-full object-cover"
                     onError={() => {}}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setCoverUrl('')}
+                    title="Remove cover image"
+                    className="absolute top-2 right-2 rounded-lg bg-black/60 p-1 text-white hover:bg-black/80 cursor-pointer"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
                 </div>
               ) : (
                 <p className="text-[11px] text-neutral-400">
-                  Upload files via the{' '}
-                  <Link to="/admin/media" className="underline hover:text-neutral-700 dark:hover:text-white">
-                    Media Library
-                  </Link>{' '}
-                  and paste the URL here.
+                  Click <strong>Choose Image</strong> to upload from your computer, or pick an existing image from your <strong>Library</strong>.
                 </p>
               )}
             </div>
@@ -599,6 +689,59 @@ export default function PostEditor() {
           </div>
 
         </div>
+
+        {/* Media Library Picker Modal for Cover Image */}
+        {showMediaPicker && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+            <div className="w-full max-w-2xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-xl dark:border-neutral-800 dark:bg-neutral-900">
+              <div className="flex items-center justify-between border-b border-neutral-200 pb-3 dark:border-neutral-800">
+                <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                  Choose Cover Image from Media Library
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowMediaPicker(false)}
+                  className="rounded-lg p-1 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mt-4 max-h-80 overflow-y-auto">
+                {loadingMedia ? (
+                  <div className="py-12 text-center text-xs text-neutral-500">
+                    Loading uploaded images...
+                  </div>
+                ) : mediaItems.length === 0 ? (
+                  <div className="py-12 text-center text-xs text-neutral-500">
+                    No images found in Media Library. Click "Choose Image" to upload a file directly.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                    {mediaItems.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          setCoverUrl(item.public_url);
+                          setShowMediaPicker(false);
+                        }}
+                        className="group relative aspect-video overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100 transition hover:border-emerald-600 hover:ring-2 hover:ring-emerald-500/30 dark:border-neutral-800 dark:bg-neutral-800"
+                      >
+                        <img
+                          src={item.public_url}
+                          alt={item.alt_text || item.file_name}
+                          referrerPolicy="no-referrer"
+                          className="h-full w-full object-cover transition group-hover:scale-105"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </AdminLayout>
