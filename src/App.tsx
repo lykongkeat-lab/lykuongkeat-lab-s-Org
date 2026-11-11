@@ -25,6 +25,7 @@ import CommentsAdmin from './pages/admin/CommentsAdmin';
 import AdsAdmin from './pages/admin/AdsAdmin';
 import MediaAdmin from './pages/admin/MediaAdmin';
 import CVAdmin from './pages/admin/CVAdmin';
+import AboutAdmin from './pages/admin/AboutAdmin';
 import MessagesAdmin from './pages/admin/MessagesAdmin';
 import SettingsAdmin from './pages/admin/SettingsAdmin';
 
@@ -146,6 +147,14 @@ export default function App() {
                 element={
                   <RequireAdmin>
                     <CVAdmin />
+                  </RequireAdmin>
+                }
+              />
+              <Route
+                path="/admin/about"
+                element={
+                  <RequireAdmin>
+                    <AboutAdmin />
                   </RequireAdmin>
                 }
               />

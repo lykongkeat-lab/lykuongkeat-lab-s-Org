@@ -48,6 +48,7 @@ export default function AdminLayout({ children, title, subtitle }) {
     { label: 'Advertisements', path: '/admin/ads', icon: Megaphone },
     { label: 'Media Library', path: '/admin/media', icon: Image },
     { label: 'CV Editor', path: '/admin/cv', icon: UserCheck },
+    { label: 'About Editor', path: '/admin/about', icon: UserCheck },
     { label: 'Messages', path: '/admin/messages', icon: Mail },
     { label: 'Site Settings', path: '/admin/settings', icon: Settings },
   ];

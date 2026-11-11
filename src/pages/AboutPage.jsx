@@ -41,6 +41,17 @@ export default function AboutPage() {
     settings?.author_avatar ||
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
+  const aboutP1 = settings?.about_p1 || t('about_p1');
+  const aboutP2 = settings?.about_p2 || t('about_p2');
+  const pillar1Title = settings?.pillar_1_title || t('pillar_1_title');
+  const pillar1Desc = settings?.pillar_1_desc || t('pillar_1_desc');
+  const pillar2Title = settings?.pillar_2_title || t('pillar_2_title');
+  const pillar2Desc = settings?.pillar_2_desc || t('pillar_2_desc');
+  const pillar3Title = settings?.pillar_3_title || t('pillar_3_title');
+  const pillar3Desc = settings?.pillar_3_desc || t('pillar_3_desc');
+  const ctaTitle = settings?.about_cta_title || t('about_cta_title');
+  const ctaDesc = settings?.about_cta_desc || t('about_cta_desc');
+
   const telegramUrl = settings?.social_telegram || settings?.social_linkedin;
   const facebookUrl = settings?.social_facebook;
   const twitterUrl = settings?.social_twitter;
@@ -56,6 +67,7 @@ export default function AboutPage() {
               <img
                 src={authorAvatar}
                 alt={authorName}
+                referrerPolicy="no-referrer"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -133,10 +145,10 @@ export default function AboutPage() {
 
           <div className="h-1.5 w-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#10b981] to-[#d9822b]" />
 
-          <div className="prose prose-slate prose-lg dark:prose-invert max-w-none leading-relaxed text-[#2c313c] dark:text-neutral-300">
-            <p>{authorBio}</p>
-            <p>{t('about_p1')}</p>
-            <p>{t('about_p2')}</p>
+          <div className="prose prose-slate prose-lg dark:prose-invert max-w-none leading-relaxed text-[#2c313c] dark:text-neutral-300 space-y-4">
+            {authorBio && <p className="whitespace-pre-line">{authorBio}</p>}
+            {aboutP1 && <p className="whitespace-pre-line">{aboutP1}</p>}
+            {aboutP2 && <p className="whitespace-pre-line">{aboutP2}</p>}
           </div>
         </div>
 
@@ -146,27 +158,27 @@ export default function AboutPage() {
             <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
               <Code className="h-6 w-6" />
             </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{t('pillar_1_title')}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
-              {t('pillar_1_desc')}
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar1Title}</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
+              {pillar1Desc}
             </p>
           </div>
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
             <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
               <Server className="h-6 w-6" />
             </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{t('pillar_2_title')}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
-              {t('pillar_2_desc')}
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar2Title}</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
+              {pillar2Desc}
             </p>
           </div>
           <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
             <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
               <Cpu className="h-6 w-6" />
             </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{t('pillar_3_title')}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400">
-              {t('pillar_3_desc')}
+            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar3Title}</h3>
+            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
+              {pillar3Desc}
             </p>
           </div>
         </div>
@@ -174,9 +186,9 @@ export default function AboutPage() {
         {/* CTA */}
         <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-8 text-[#111318] dark:border-neutral-700 dark:bg-neutral-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-lg font-bold text-[#111318] dark:text-white">{t('about_cta_title')}</h3>
+            <h3 className="text-lg font-bold text-[#111318] dark:text-white">{ctaTitle}</h3>
             <p className="text-xs font-medium text-[#4a5162] dark:text-neutral-400">
-              {t('about_cta_desc')}
+              {ctaDesc}
             </p>
           </div>
           <Link
