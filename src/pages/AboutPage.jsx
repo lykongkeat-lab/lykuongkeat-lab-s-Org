@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Send, Facebook, Twitter, ArrowRight, Code, Server, Cpu } from 'lucide-react';
+import {
+  Github,
+  Send,
+  Facebook,
+  Twitter,
+  ArrowRight,
+  Code,
+  Server,
+  Cpu,
+  Globe,
+  Terminal,
+  Layers,
+  Shield,
+  Sparkles
+} from 'lucide-react';
 import Layout from '../components/Layout';
 import { useLanguage } from '../lib/LanguageContext';
 import { getSiteSettings } from '../lib/api';
@@ -16,6 +30,28 @@ function TikTokIcon({ className = 'h-4 w-4' }) {
       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
     </svg>
   );
+}
+
+function getPillarIconComponent(iconName) {
+  switch (iconName) {
+    case 'server':
+      return <Server className="h-6 w-6" />;
+    case 'cpu':
+      return <Cpu className="h-6 w-6" />;
+    case 'terminal':
+      return <Terminal className="h-6 w-6" />;
+    case 'globe':
+      return <Globe className="h-6 w-6" />;
+    case 'layers':
+      return <Layers className="h-6 w-6" />;
+    case 'shield':
+      return <Shield className="h-6 w-6" />;
+    case 'sparkles':
+      return <Sparkles className="h-6 w-6" />;
+    case 'code':
+    default:
+      return <Code className="h-6 w-6" />;
+  }
 }
 
 export default function AboutPage() {
@@ -43,12 +79,31 @@ export default function AboutPage() {
 
   const aboutP1 = settings?.about_p1 || t('about_p1');
   const aboutP2 = settings?.about_p2 || t('about_p2');
-  const pillar1Title = settings?.pillar_1_title || t('pillar_1_title');
-  const pillar1Desc = settings?.pillar_1_desc || t('pillar_1_desc');
-  const pillar2Title = settings?.pillar_2_title || t('pillar_2_title');
-  const pillar2Desc = settings?.pillar_2_desc || t('pillar_2_desc');
-  const pillar3Title = settings?.pillar_3_title || t('pillar_3_title');
-  const pillar3Desc = settings?.pillar_3_desc || t('pillar_3_desc');
+
+  const pillars =
+    Array.isArray(settings?.about_pillars) && settings.about_pillars.length > 0
+      ? settings.about_pillars
+      : [
+          {
+            id: 'pillar-1',
+            icon: 'code',
+            title: settings?.pillar_1_title || t('pillar_1_title'),
+            description: settings?.pillar_1_desc || t('pillar_1_desc'),
+          },
+          {
+            id: 'pillar-2',
+            icon: 'server',
+            title: settings?.pillar_2_title || t('pillar_2_title'),
+            description: settings?.pillar_2_desc || t('pillar_2_desc'),
+          },
+          {
+            id: 'pillar-3',
+            icon: 'cpu',
+            title: settings?.pillar_3_title || t('pillar_3_title'),
+            description: settings?.pillar_3_desc || t('pillar_3_desc'),
+          },
+        ];
+
   const ctaTitle = settings?.about_cta_title || t('about_cta_title');
   const ctaDesc = settings?.about_cta_desc || t('about_cta_desc');
 
@@ -154,33 +209,22 @@ export default function AboutPage() {
 
         {/* Core Pillars */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 border-t border-[#e2e5ec] dark:border-neutral-800">
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-              <Code className="h-6 w-6" />
+          {pillars.map((card, index) => (
+            <div
+              key={card.id || index}
+              className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2"
+            >
+              <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
+                {getPillarIconComponent(card.icon)}
+              </div>
+              <h3 className="text-base font-bold text-[#111318] dark:text-white">
+                {card.title}
+              </h3>
+              <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
+                {card.description}
+              </p>
             </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar1Title}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
-              {pillar1Desc}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-              <Server className="h-6 w-6" />
-            </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar2Title}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
-              {pillar2Desc}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-5 dark:border-neutral-800 dark:bg-neutral-900/40 space-y-2">
-            <div className="inline-flex rounded-lg bg-[#efe4c8] p-2 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-              <Cpu className="h-6 w-6" />
-            </div>
-            <h3 className="text-base font-bold text-[#111318] dark:text-white">{pillar3Title}</h3>
-            <p className="text-xs text-[#4a5162] dark:text-neutral-400 whitespace-pre-line">
-              {pillar3Desc}
-            </p>
-          </div>
+          ))}
         </div>
 
         {/* CTA */}

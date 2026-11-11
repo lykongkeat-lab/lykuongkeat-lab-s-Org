@@ -9,6 +9,7 @@ import {
   Megaphone, 
   Image, 
   UserCheck, 
+  Users,
   Settings, 
   Mail, 
   LogOut, 
@@ -50,6 +51,7 @@ export default function AdminLayout({ children, title, subtitle }) {
     { label: 'CV Editor', path: '/admin/cv', icon: UserCheck },
     { label: 'About Editor', path: '/admin/about', icon: UserCheck },
     { label: 'Messages', path: '/admin/messages', icon: Mail },
+    { label: 'Subscribers', path: '/admin/subscribers', icon: Users },
     { label: 'Site Settings', path: '/admin/settings', icon: Settings },
   ];
 

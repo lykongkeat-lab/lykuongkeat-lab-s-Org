@@ -27,6 +27,7 @@ import MediaAdmin from './pages/admin/MediaAdmin';
 import CVAdmin from './pages/admin/CVAdmin';
 import AboutAdmin from './pages/admin/AboutAdmin';
 import MessagesAdmin from './pages/admin/MessagesAdmin';
+import SubscribersAdmin from './pages/admin/SubscribersAdmin';
 import SettingsAdmin from './pages/admin/SettingsAdmin';
 
 function RoutePersistence() {
@@ -163,6 +164,14 @@ export default function App() {
                 element={
                   <RequireAdmin>
                     <MessagesAdmin />
+                  </RequireAdmin>
+                }
+              />
+              <Route
+                path="/admin/subscribers"
+                element={
+                  <RequireAdmin>
+                    <SubscribersAdmin />
                   </RequireAdmin>
                 }
               />

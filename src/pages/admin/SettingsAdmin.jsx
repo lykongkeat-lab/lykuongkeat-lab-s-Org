@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Save, Check, AlertCircle, Users, Trash2, Upload, Image as ImageIcon, X } from 'lucide-react';
+import { Save, Check, AlertCircle, Upload, Image as ImageIcon, X } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { 
   getSiteSettings, 
   updateSiteSettings, 
-  getSubscribers, 
-  deleteSubscriber,
   uploadMediaFile,
   getMediaList
 } from '../../lib/api';
@@ -26,7 +24,6 @@ export default function SettingsAdmin() {
     social_tiktok: 'https://tiktok.com',
   });
 
-  const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -40,37 +37,31 @@ export default function SettingsAdmin() {
     let mounted = true;
     async function loadData() {
       try {
-        const [settingsData, subsData] = await Promise.all([
-          getSiteSettings('general'),
-          getSubscribers(),
-        ]);
+        const settingsData = await getSiteSettings('general');
 
-        if (mounted) {
-          if (settingsData) {
-            setSettings({
-              ...settingsData,
-              social_github: settingsData.social_github ?? 'https://github.com',
-              social_telegram:
-                settingsData.social_telegram !== undefined
-                  ? settingsData.social_telegram
-                  : settingsData.social_linkedin === 'https://linkedin.com'
-                  ? 'https://t.me'
-                  : settingsData.social_linkedin || 'https://t.me',
-              social_facebook:
-                settingsData.social_facebook !== undefined
-                  ? settingsData.social_facebook
-                  : 'https://facebook.com',
-              social_twitter:
-                settingsData.social_twitter !== undefined
-                  ? settingsData.social_twitter
-                  : 'https://x.com',
-              social_tiktok:
-                settingsData.social_tiktok !== undefined
-                  ? settingsData.social_tiktok
-                  : 'https://tiktok.com',
-            });
-          }
-          setSubscribers(subsData || []);
+        if (mounted && settingsData) {
+          setSettings({
+            ...settingsData,
+            social_github: settingsData.social_github ?? 'https://github.com',
+            social_telegram:
+              settingsData.social_telegram !== undefined
+                ? settingsData.social_telegram
+                : settingsData.social_linkedin === 'https://linkedin.com'
+                ? 'https://t.me'
+                : settingsData.social_linkedin || 'https://t.me',
+            social_facebook:
+              settingsData.social_facebook !== undefined
+                ? settingsData.social_facebook
+                : 'https://facebook.com',
+            social_twitter:
+              settingsData.social_twitter !== undefined
+                ? settingsData.social_twitter
+                : 'https://x.com',
+            social_tiktok:
+              settingsData.social_tiktok !== undefined
+                ? settingsData.social_tiktok
+                : 'https://tiktok.com',
+          });
         }
       } catch (err) {
         console.error('Error loading settings:', err);
@@ -153,20 +144,10 @@ export default function SettingsAdmin() {
     }
   };
 
-  const handleDeleteSubscriber = async (sub) => {
-    if (!window.confirm(`Remove ${sub.email} from newsletter subscribers?`)) return;
-    try {
-      await deleteSubscriber(sub.id);
-      setSubscribers((prev) => prev.filter((s) => s.id !== sub.id));
-    } catch (err) {
-      alert('Error deleting subscriber: ' + err.message);
-    }
-  };
-
   return (
     <AdminLayout
-      title="Site Settings &amp; Subscribers"
-      subtitle="Customize global website branding, profile metadata, CV links, and newsletter audience."
+      title="Site Settings"
+      subtitle="Customize global website branding, profile metadata, CV links, and social profiles."
     >
       <div className="space-y-10">
         
@@ -411,59 +392,6 @@ export default function SettingsAdmin() {
               </button>
             </div>
           </form>
-        </div>
-
-        {/* Newsletter Subscribers Table */}
-        <div className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 space-y-4">
-          <div className="flex items-center justify-between border-b border-neutral-100 pb-3 dark:border-neutral-800">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-sky-600" />
-              <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-                Newsletter Subscribers ({subscribers.length})
-              </h3>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-neutral-600 dark:text-neutral-300">
-              <thead className="border-b border-neutral-200 bg-neutral-50 text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900/80">
-                <tr>
-                  <th scope="col" className="px-4 py-3">Subscriber Email</th>
-                  <th scope="col" className="px-4 py-3">Date Subscribed</th>
-                  <th scope="col" className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-                {subscribers.length === 0 ? (
-                  <tr>
-                    <td colSpan="3" className="px-4 py-8 text-center text-neutral-400">
-                      No subscribers yet.
-                    </td>
-                  </tr>
-                ) : (
-                  subscribers.map((sub) => (
-                    <tr key={sub.id} className="hover:bg-neutral-50/70 dark:hover:bg-neutral-800/40">
-                      <td className="px-4 py-3 font-semibold text-neutral-900 dark:text-white">
-                        {sub.email}
-                      </td>
-                      <td className="px-4 py-3 text-neutral-500">
-                        {new Date(sub.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => handleDeleteSubscriber(sub)}
-                          className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
-                          title="Remove subscriber"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
         </div>
 
         {/* Media Library Image Picker Modal */}

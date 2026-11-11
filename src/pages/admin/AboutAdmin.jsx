@@ -11,6 +11,13 @@ import {
   Code,
   Server,
   Cpu,
+  Globe,
+  Terminal,
+  Layers,
+  Shield,
+  Sparkles,
+  Plus,
+  Trash2,
   User
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
@@ -20,6 +27,38 @@ import {
   uploadMediaFile,
   getMediaList
 } from '../../lib/api';
+
+const ICON_OPTIONS = [
+  { value: 'code', label: 'Code', Icon: Code },
+  { value: 'server', label: 'Server / DB', Icon: Server },
+  { value: 'cpu', label: 'CPU / Performance', Icon: Cpu },
+  { value: 'terminal', label: 'Terminal', Icon: Terminal },
+  { value: 'globe', label: 'Web / Cloud', Icon: Globe },
+  { value: 'layers', label: 'Architecture', Icon: Layers },
+  { value: 'shield', label: 'Security', Icon: Shield },
+  { value: 'sparkles', label: 'AI / Innovation', Icon: Sparkles },
+];
+
+const DEFAULT_PILLARS = [
+  {
+    id: 'pillar-1',
+    icon: 'code',
+    title: 'Clean Engineering',
+    description: 'Writing maintainable, well-tested codebases in React, TypeScript, and Node.js.',
+  },
+  {
+    id: 'pillar-2',
+    icon: 'server',
+    title: 'Backend & DBs',
+    description: 'Designing scalable PostgreSQL schemas, Edge APIs, and distributed storage.',
+  },
+  {
+    id: 'pillar-3',
+    icon: 'cpu',
+    title: 'Performance',
+    description: 'Profiling bottlenecks, optimizing bundle sizes, and reducing latency at the edge.',
+  },
+];
 
 const DEFAULT_ABOUT_FIELDS = {
   author_name: 'Ly Kuongkeat',
@@ -31,15 +70,16 @@ const DEFAULT_ABOUT_FIELDS = {
     'Welcome to my personal tech blog. Here, I document real challenges, architectural solutions, and coding techniques that come up while designing, building, and maintaining production applications.',
   about_p2:
     'My goal is to share honest reflections, detailed benchmarks, and code recipes that save other developers time and headaches.',
-  pillar_1_title: 'Clean Engineering',
-  pillar_1_desc: 'Writing maintainable, well-tested codebases in React, TypeScript, and Node.js.',
-  pillar_2_title: 'Backend & DBs',
-  pillar_2_desc: 'Designing scalable PostgreSQL schemas, Edge APIs, and distributed storage.',
-  pillar_3_title: 'Performance',
-  pillar_3_desc: 'Profiling bottlenecks, optimizing bundle sizes, and reducing latency at the edge.',
+  about_pillars: DEFAULT_PILLARS,
   about_cta_title: 'Have a question or project in mind?',
   about_cta_desc: 'Feel free to reach out for collaborations, technical discussions, or consulting.',
 };
+
+function renderPillarIcon(iconName) {
+  const match = ICON_OPTIONS.find((opt) => opt.value === iconName);
+  const IconComp = match ? match.Icon : Code;
+  return <IconComp className="h-4 w-4" />;
+}
 
 export default function AboutAdmin() {
   const [settings, setSettings] = useState(DEFAULT_ABOUT_FIELDS);
@@ -58,6 +98,32 @@ export default function AboutAdmin() {
       try {
         const data = await getSiteSettings('general');
         if (mounted && data) {
+          let resolvedPillars = DEFAULT_PILLARS;
+          if (Array.isArray(data.about_pillars) && data.about_pillars.length > 0) {
+            resolvedPillars = data.about_pillars;
+          } else if (data.pillar_1_title || data.pillar_2_title || data.pillar_3_title) {
+            resolvedPillars = [
+              {
+                id: 'pillar-1',
+                icon: 'code',
+                title: data.pillar_1_title ?? DEFAULT_PILLARS[0].title,
+                description: data.pillar_1_desc ?? DEFAULT_PILLARS[0].description,
+              },
+              {
+                id: 'pillar-2',
+                icon: 'server',
+                title: data.pillar_2_title ?? DEFAULT_PILLARS[1].title,
+                description: data.pillar_2_desc ?? DEFAULT_PILLARS[1].description,
+              },
+              {
+                id: 'pillar-3',
+                icon: 'cpu',
+                title: data.pillar_3_title ?? DEFAULT_PILLARS[2].title,
+                description: data.pillar_3_desc ?? DEFAULT_PILLARS[2].description,
+              },
+            ];
+          }
+
           setSettings((prev) => ({
             ...prev,
             ...data,
@@ -67,12 +133,7 @@ export default function AboutAdmin() {
             author_bio: data.author_bio ?? prev.author_bio,
             about_p1: data.about_p1 ?? prev.about_p1,
             about_p2: data.about_p2 ?? prev.about_p2,
-            pillar_1_title: data.pillar_1_title ?? prev.pillar_1_title,
-            pillar_1_desc: data.pillar_1_desc ?? prev.pillar_1_desc,
-            pillar_2_title: data.pillar_2_title ?? prev.pillar_2_title,
-            pillar_2_desc: data.pillar_2_desc ?? prev.pillar_2_desc,
-            pillar_3_title: data.pillar_3_title ?? prev.pillar_3_title,
-            pillar_3_desc: data.pillar_3_desc ?? prev.pillar_3_desc,
+            about_pillars: resolvedPillars,
             about_cta_title: data.about_cta_title ?? prev.about_cta_title,
             about_cta_desc: data.about_cta_desc ?? prev.about_cta_desc,
           }));
@@ -89,6 +150,39 @@ export default function AboutAdmin() {
       mounted = false;
     };
   }, []);
+
+  const handleAddPillarCard = () => {
+    const nextIndex = (settings.about_pillars?.length || 0) + 1;
+    const defaultIcons = ['code', 'server', 'cpu', 'terminal', 'globe', 'layers', 'shield', 'sparkles'];
+    const icon = defaultIcons[(nextIndex - 1) % defaultIcons.length];
+
+    const newCard = {
+      id: `pillar-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      icon,
+      title: `Highlight Card ${nextIndex}`,
+      description: 'Describe your skill, engineering focus, or achievement here.',
+    };
+
+    setSettings((prev) => ({
+      ...prev,
+      about_pillars: [...(prev.about_pillars || []), newCard],
+    }));
+  };
+
+  const handleUpdatePillarCard = (index, field, value) => {
+    setSettings((prev) => {
+      const updated = [...(prev.about_pillars || [])];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, about_pillars: updated };
+    });
+  };
+
+  const handleRemovePillarCard = (index) => {
+    setSettings((prev) => {
+      const updated = (prev.about_pillars || []).filter((_, i) => i !== index);
+      return { ...prev, about_pillars: updated };
+    });
+  };
 
   const handleAvatarFileChange = async (e) => {
     const file = e.target.files?.[0];
@@ -148,9 +242,17 @@ export default function AboutAdmin() {
 
     try {
       const existing = (await getSiteSettings('general')) || {};
+      const pillars = settings.about_pillars || [];
       const merged = {
         ...existing,
         ...settings,
+        about_pillars: pillars,
+        pillar_1_title: pillars[0]?.title || '',
+        pillar_1_desc: pillars[0]?.description || '',
+        pillar_2_title: pillars[1]?.title || '',
+        pillar_2_desc: pillars[1]?.description || '',
+        pillar_3_title: pillars[2]?.title || '',
+        pillar_3_desc: pillars[2]?.description || '',
       };
       await updateSiteSettings('general', merged);
       setStatusMsg({
@@ -167,6 +269,8 @@ export default function AboutAdmin() {
       setSaving(false);
     }
   };
+
+  const pillarsList = settings.about_pillars || [];
 
   return (
     <AdminLayout
@@ -349,117 +453,106 @@ export default function AboutAdmin() {
 
             {/* Section 2: Core Engineering Pillars */}
             <div className="rounded-3xl border border-neutral-200 bg-white p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 space-y-6">
-              <div className="border-b border-neutral-100 pb-4 dark:border-neutral-800">
-                <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-                  2. Core Pillars (3 Highlight Cards)
-                </h3>
-                <p className="text-xs text-neutral-500">
-                  Customize the three feature cards displayed below your biography on the About page.
-                </p>
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4 dark:border-neutral-800">
+                <div>
+                  <h3 className="text-base font-bold text-neutral-900 dark:text-white">
+                    2. Core Pillars ({pillarsList.length} Highlight {pillarsList.length === 1 ? 'Card' : 'Cards'})
+                  </h3>
+                  <p className="text-xs text-neutral-500">
+                    Customize the feature cards displayed below your biography on the About page, or add more cards.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddPillarCard}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:brightness-110 cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add More Card
+                </button>
               </div>
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {/* Pillar 1 */}
-                <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 space-y-3 dark:border-neutral-800 dark:bg-neutral-900/50">
-                  <div className="flex items-center gap-2">
-                    <div className="rounded-lg bg-[#efe4c8] p-1.5 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-                      <Code className="h-4 w-4" />
-                    </div>
-                    <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                      Card 1
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Title
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.pillar_1_title || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_1_title: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={settings.pillar_1_desc || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_1_desc: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white p-2.5 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
-                  </div>
-                </div>
+                {pillarsList.map((card, index) => (
+                  <div
+                    key={card.id || index}
+                    className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 space-y-3 dark:border-neutral-800 dark:bg-neutral-900/50"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="rounded-lg bg-[#efe4c8] p-1.5 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
+                          {renderPillarIcon(card.icon)}
+                        </div>
+                        <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                          Card {index + 1}
+                        </span>
+                      </div>
 
-                {/* Pillar 2 */}
-                <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 space-y-3 dark:border-neutral-800 dark:bg-neutral-900/50">
-                  <div className="flex items-center gap-2">
-                    <div className="rounded-lg bg-[#efe4c8] p-1.5 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-                      <Server className="h-4 w-4" />
-                    </div>
-                    <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                      Card 2
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Title
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.pillar_2_title || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_2_title: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={settings.pillar_2_desc || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_2_desc: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white p-2.5 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
-                  </div>
-                </div>
+                      <div className="flex items-center gap-1.5">
+                        <select
+                          value={card.icon || 'code'}
+                          onChange={(e) => handleUpdatePillarCard(index, 'icon', e.target.value)}
+                          title="Choose card icon"
+                          className="rounded-lg border border-neutral-300 bg-white px-2 py-1 text-[11px] font-medium text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+                        >
+                          {ICON_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
 
-                {/* Pillar 3 */}
-                <div className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 space-y-3 dark:border-neutral-800 dark:bg-neutral-900/50">
-                  <div className="flex items-center gap-2">
-                    <div className="rounded-lg bg-[#efe4c8] p-1.5 text-[#6b4c1b] dark:bg-neutral-800 dark:text-[#05dcef]">
-                      <Cpu className="h-4 w-4" />
+                        {pillarsList.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemovePillarCard(index)}
+                            title="Remove card"
+                            className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/40 cursor-pointer"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                      Card 3
-                    </span>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={card.title || ''}
+                        onChange={(e) => handleUpdatePillarCard(index, 'title', e.target.value)}
+                        className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
+                        Description
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={card.description || ''}
+                        onChange={(e) => handleUpdatePillarCard(index, 'description', e.target.value)}
+                        className="w-full rounded-xl border border-neutral-300 bg-white p-2.5 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Title
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.pillar_3_title || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_3_title: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
+                ))}
+
+                {/* Add More Card Tile */}
+                <button
+                  type="button"
+                  onClick={handleAddPillarCard}
+                  className="flex min-h-[190px] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50/30 p-6 text-neutral-500 transition hover:border-[#0d47e1] hover:bg-blue-50/30 hover:text-[#0d47e1] dark:border-neutral-800 dark:bg-neutral-900/20 dark:text-neutral-400 dark:hover:border-[#05dcef] dark:hover:text-[#05dcef] cursor-pointer"
+                >
+                  <div className="rounded-full bg-neutral-200/70 p-2.5 dark:bg-neutral-800">
+                    <Plus className="h-5 w-5" />
                   </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={settings.pillar_3_desc || ''}
-                      onChange={(e) => setSettings({ ...settings, pillar_3_desc: e.target.value })}
-                      className="w-full rounded-xl border border-neutral-300 bg-white p-2.5 text-xs text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                    />
-                  </div>
-                </div>
+                  <span className="text-xs font-bold">+ Add More Card</span>
+                </button>
               </div>
             </div>
 

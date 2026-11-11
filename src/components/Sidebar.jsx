@@ -8,6 +8,8 @@ import {
   Mail, 
   Folder, 
   Tag as TagIcon, 
+  CheckCircle2, 
+  AlertCircle, 
   Clock, 
   ArrowRight
 } from 'lucide-react';
@@ -17,7 +19,8 @@ import {
   getCategories, 
   getTags, 
   getPosts, 
-  getSiteSettings 
+  getSiteSettings, 
+  subscribeNewsletter 
 } from '../lib/api';
 
 function TikTokIcon({ className = 'h-4 w-4' }) {
@@ -39,6 +42,10 @@ export default function Sidebar() {
   const [recentPosts, setRecentPosts] = useState([]);
   const [siteSettings, setSiteSettings] = useState(null);
   const { t } = useLanguage();
+
+  // Newsletter form state
+  const [email, setEmail] = useState('');
+  const [subStatus, setSubStatus] = useState({ state: 'idle', message: '' });
 
   useEffect(() => {
     let mounted = true;
@@ -69,6 +76,26 @@ export default function Sidebar() {
       mounted = false;
     };
   }, []);
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      setSubStatus({ state: 'error', message: 'Please enter a valid email address.' });
+      return;
+    }
+
+    setSubStatus({ state: 'loading', message: '' });
+    try {
+      const res = await subscribeNewsletter(email);
+      setSubStatus({ state: 'success', message: res?.message || 'Thank you for subscribing!' });
+      setEmail('');
+    } catch (err) {
+      setSubStatus({
+        state: 'error',
+        message: err.message || 'Subscription failed. Please try again.',
+      });
+    }
+  };
 
   const authorName = siteSettings?.author_name || 'Ly Kuongkeat';
   const authorTitle = siteSettings?.author_title || 'Software Engineer';
@@ -195,6 +222,49 @@ export default function Sidebar() {
 
       {/* 2. Advertisement Slot: sidebar_top */}
       <AdSlot slot="sidebar_top" />
+
+      {/* 3. Newsletter Subscription */}
+      <div className="rounded-2xl border border-[#e2e5ec] bg-[#ffffff] p-6 shadow-2xs dark:border-neutral-800 dark:bg-neutral-900/50">
+        <div className="mb-2 flex items-center gap-2 text-[#111318] dark:text-white">
+          <Mail className="h-5 w-5 text-[#0d47e1] dark:text-[#3cd0a8]" />
+          <h3 className="text-base font-bold">{t('sidebar_newsletter_title')}</h3>
+        </div>
+        <p className="mb-4 text-xs leading-relaxed text-[#2c313c] dark:text-neutral-400">
+          {t('sidebar_newsletter_desc')}
+        </p>
+
+        <form onSubmit={handleNewsletterSubmit} className="space-y-2.5">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t('sidebar_newsletter_placeholder')}
+            required
+            className="w-full rounded-xl border border-[#d5dae5] bg-[#ffffff] px-3.5 py-2 text-sm text-[#111318] placeholder-slate-400 focus:border-[#0d47e1] focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+          />
+          <button
+            type="submit"
+            disabled={subStatus.state === 'loading'}
+            className="w-full rounded-xl bg-gradient-to-r from-[#1d63ed] via-[#1595d6] to-[#2eb886] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:brightness-110 disabled:opacity-60 cursor-pointer"
+          >
+            {subStatus.state === 'loading' ? t('sidebar_subscribing') : t('sidebar_subscribe')}
+          </button>
+        </form>
+
+        {subStatus.state === 'success' && (
+          <div className="mt-3 flex items-start gap-1.5 text-xs font-semibold text-[#10b981]">
+            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <span>{subStatus.message}</span>
+          </div>
+        )}
+
+        {subStatus.state === 'error' && (
+          <div className="mt-3 flex items-start gap-1.5 text-xs font-medium text-rose-600 dark:text-rose-400">
+            <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <span>{subStatus.message}</span>
+          </div>
+        )}
+      </div>
 
       {/* 4. Recent Posts */}
       {recentPosts.length > 0 && (

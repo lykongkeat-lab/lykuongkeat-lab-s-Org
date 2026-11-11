@@ -130,7 +130,7 @@ export default function Dashboard() {
       value: stats.subscribersCount,
       icon: Users,
       color: 'sky',
-      link: '/admin/settings',
+      link: '/admin/subscribers',
     },
     {
       label: 'Unread Messages',
